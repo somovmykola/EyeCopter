@@ -1,0 +1,854 @@
+\documentclass[10pt,letterpaper]{article}
+\setlength{\paperheight}{11in}
+\setlength{\paperwidth}{8.5in}
+\usepackage[ascii]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{gensymb}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{soul}
+\usepackage{array}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\usepackage{latexsym}
+\usepackage{pdfpages}
+\usepackage{chngpage}
+\usepackage{titlesec}
+\usepackage{hyperref} % Inserts hyper-references in the table of contents
+\hypersetup{
+	colorlinks,
+	citecolor=black,
+	filecolor=black,
+	linkcolor=black,
+	urlcolor=black
+}
+\usepackage{tikz} 			% Diagrams
+\usetikzlibrary{arrows}		% Diagrams
+\usepackage{verbatim}		% Diagrams
+\tikzstyle{int}=[draw, fill=blue!20, minimum size=2em]
+\tikzstyle{init} = [pin edge={to-,thin,black}]
+
+% Create a macro for the headings for each FMEA chart
+\newcommand{\fmeaheader}{\multicolumn{1}{c}{\textbf{Failure Modes}} & \multicolumn{1}{c}{\textbf{Effect of Failures}} & \multicolumn{1}{c}{\textbf{Causes of Failure}} & \multicolumn{1}{c}{\textbf{Detection}} & \multicolumn{1}{c}{\textbf{Actions}}}
+
+
+
+\begin{document}
+	
+	% TITLE PAGE
+	
+	\begin{titlepage}
+		\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+		\center
+		
+		\textsc{\LARGE McMaster University}\\[1.5cm] % Name of your university/college
+		\textsc{\Large Component Design}\\[0.5cm] % Major heading such as course name
+		\textsc{\large 4G06 Capstone Design Project}\\[0.5cm] % Minor heading such as course title
+		
+		\HRule \\[0.4cm] 
+		{ \huge \bfseries OSTRICH \\[2mm] \textit{A Large Scale 3D Scanner}}\\[0.4cm] % Title of your document
+		\HRule \\[1.5cm]
+		
+		\begin{tabular}{ccc}
+			\bf{Paul Correia}		& \bf{Nicolas Lelievre} 	& \bf{Bennett Mackenzie}		\\
+			Mechatronics Eng 		& Software Eng 				& Software Eng 					\\
+			\textit{1132370} 		& \textit{1203446}			& \textit{1211985} 				\\ \\
+			\bf{Tigran Martikian} 	& \bf{Balraj Shah} 			& \bf{Mykola Somov} 			\\
+			Software Eng			& Software Eng				& Software Eng 					\\
+			\textit{1213170} 		& \textit{1207997}			& \textit{1141160}
+		\end{tabular}\\[4cm]
+		
+		{\large January 25, 2016}\\[3cm] 
+		
+		%\includegraphics{Logo}\\[1cm] % Include a department/university logo - this will require the graphicx package
+		
+		\vfill % Fill the rest of the page with whitespace
+		
+	\end{titlepage}
+	
+    
+\thispagestyle{empty}
+
+\tableofcontents
+
+
+\newpage
+
+
+\thispagestyle{empty}
+
+\listoffigures
+
+\listoftables
+
+
+\newpage
+
+
+\thispagestyle{empty}
+
+\section*{Revisions}
+\vspace{1cm}
+\begin{center}
+\makebox[\textwidth][c]{
+  \begin{tabular}{cccc}
+      \hline 
+      \sc{Revision} & \sc{Date} & \sc{Authors} & \sc{Description of Revision} \\ \hline
+      0 & Jan 25, 2016 & $\begin{matrix} \text{Paul Correia} \\ \text{Nicolas Lelievre} \\ \text{Bennett Mackenzie} \\ \text{Tigran Martikian} \\ \text{Balraj Shah} \\ \text{Mykola Somov} \end{matrix}$ & Initial revision of the component design. 
+  \end{tabular}}
+\end{center}
+
+\newpage
+
+
+\section{Introduction}
+\subsection{System Purpose \& Background}
+The advent of three dimensional modelling has revealed many new possibilities in computer graphics used in a multitude of fields ranging from game design to medical applications. As of late, three dimensional scanners have become significantly more accessible to the average consumer and therefore have gained immense popularity among professionals and hobbyists alike. \par 
+The main focus of scanning three dimensional objects has however remained transfixed on a relatively small scale, often within a human's reach. Although some hand held three dimensional scanners offer high resolution scans and very detailed renderings, they are limited to house-hold object sizes meaning that larger objects are not easily scanned using such methods. \par 
+The goal of this project is to make large-scale three dimensional scanners more readily available to users in need of scanning objects larger than the average hand held scanner can accommodate as well as removing the human element required in scanning to ensure continuously accurate and autonomous scans. \par 
+The purpose of this document is to specify the overall system design necessary for this project in terms of a system overview encapsulating various variables and diagrams, behavioural overview of the system, individual component analysis, a description of normal intended operation as well as possible and manageable undesired behaviour within the system. The document will be in continuous revision during the developmental cycle of the project and will aid in keeping the system design in a constant and clear focus.
+
+\subsection{System Scope}
+The OSTRICH (\textit{Object Scanning Tetra Rotary Independent Copter Hybrid}) is the result of our autonomous large-scale three dimensional scanner. The scope of the project rests mostly on designing a functioning quad-copter capable of sustaining the weight of all instruments on board, as well as converting the gathered information into a three dimensional model and ensuring that the OSTRICH is autonomous enough to independently scan a large-sized object without necessary human intervention. Note however that some larger components of the project are outside of our scope and will therefore be adapted to function for our specific needs. \par 
+Items of functionality that remain in scope are: 
+\begin{enumerate}
+	\item Designing a quad-copter capable of flight;
+    \item Manipulating acquired flight controller to allow stable flight
+    \item Manipulating basic object avoidance system to eliminate possible collisions;
+    \item Designing a control system capable of automated flight and scans; 
+    \item Designing a launchpad for distance and position locating as well as homing;
+    \item Assembling basic 3D scanner capable of scanning objects within size limitations
+    \item Interfacing with 3D model conversion software;
+    \item Printing scans using a 3D printer;
+\end{enumerate}
+Items of functionality that remain outside of scope are:
+\begin{enumerate}
+	\item Designing a flight controller;
+    \item Designing a collision avoidance system;
+    \item Developing 3D model conversion software;
+    \item Building a 3D printer;
+\end{enumerate}
+The goal of the OSTRICH is to be generally applicable to a wide range of possible uses for both professionals and hobbyists, depending on the intended applications. These may include surveying small buildings, rendering sculptures/statues, applications for entertainment such as game design or film, researching and studying fragile historical artifacts, and so on. 
+
+\subsection{Road-map}
+The project will continue to advance as before. The project is divided into two teams (Modelling and Flight), and each team will do internal validation upon their components, followed by external validation by the other team members. The entire team will be working concurrently on the component design. For Flight team, the next milestone is sending commands via arduino to the flight controller. For Modelling team, the next milestone is generating a full 3D model from pre-screened images.
+
+
+\newpage
+
+
+\subsection{Definitions, Acronyms \& Abbreviations}
+Below are definitions, acronyms and abbreviations for specific or uncommon words used in the following document. 
+\begin{table}[ht]
+  \begin{center}
+  \makebox[\textwidth][c]{
+    \begin{tabular}{p{4cm} p{8.5cm}}
+
+        \textbf{3D} & In this context, the representation of a three dimensional real-world object in a two dimensional digital environment using geometric data. \\ \\
+        
+        \textbf{ESC} & The \textit{Electronic Speed Controller} controls the speeds at which each motor revolves in order to achieve movement during flight. \\ \\
+        
+        \textbf{fps} & Camera's picture rate measured in \textit{frames per second}. \\ \\
+        
+        \textbf{MP} & A \textit{megapixel} refers to the size of an image in reference to a photo from a digital camera. \\ \\
+        
+        \textbf{Modular Component} & A component of the OSTRICH which is designed to be easily removable, repairable or replaceable. Most of the OSTRICH's outer hull constitutes as a Modular Component. \\ \\
+        
+        \textbf{Non-Modular Component} & A component of the OSTRICH which cannot be removed, replaced, or repaired with ease. \\ \\
+        
+        \textbf{ppi} & Camera's image resolution measured in \textit{pixels per inch}. \\ \\
+
+        \textbf{Quad-copter} & A helicopter-like vehicle propelled by four rotors. In this context, it is relatively small and manageable by a single person. \\ \\
+
+		% WTF?!?!?!?
+        \textbf{OSTRICH} & Our project name abbreviation which stands for \textit{Object Scanning Tetra Rotary Independent Copter Hybrid}. \\ \\  % WTFFFFFFFFFFF - lol Paul just accept it :P
+
+        \textcolor{red}{*} & A red asterisk denotes aspects that are liable to change during the development process.
+
+    \end{tabular}}
+  \end{center}
+\end{table}
+
+
+\newpage
+
+
+\subsection{References}
+\begin{enumerate}
+	\item "Flying an Unmanned Aircraft for Work or Research." Government of Canada; Transport Canada; Safety and Security Group, Civil Aviation. Web. 2 Nov. 2015.
+	\item "Advisory Circular (AC) No. 600-004." Government of Canada; Transport Canada; Safety and Security Group, Civil Aviation. 6 Jan. 2015. Web. 2 Nov. 2015.
+    \item "Insight3D - Quick Tutorial." Insight3D Tutorial. Web. 7 Dec. 2015. \texttt{<http://insight3d.sourceforge.net/insight3d\_tutorial.pdf>}.
+\end{enumerate}
+
+
+\newpage
+
+
+\section{Module Guide}
+The following sections detail the MIS (Module Interface Specification), MID (Module Internal Design), and Scheduling Specifications of various subsystems of the OSTRICH system as individual modules. The following modules are specified:
+
+\begin{itemize}
+	\item Model Generation
+    \item Camera Module
+    \item Flight Module
+    \item Battery Management System
+    \item Environment Sensing
+\end{itemize}
+
+These components are able to communicate with other modules which they have been designed to communicate with. These communications will act as key variables passed between the target modules. \par  
+
+When and if a component must communicate a signal or variable to all other modules that variable or signal will be passed as a global variable. Global variable count will be kept to a minimum throughout the system, and all global variable must be relevant to almost all modules. 
+
+
+
+
+\newpage
+
+
+\section{Module Interface Specification}
+The below \textit{Module Interface Specification} (MIS) specifies the externally observable behaviour of a module's access routines.
+\subsection{Model Generation}
+\subsubsection{checkImages}
+\paragraph{Use}
+Determine whether there are images stored on the SD Card.
+\paragraph{Access Programs}
+\begin{itemize}
+	\item Raspberry Pi OS
+\end{itemize}
+\begin{table}[H]
+  \makebox[\textwidth][c]{
+	\begin{tabular}{rp{8cm}}
+		\textbf{Name} & checkImages \\ \hline
+        \textbf{Parameter} & N/A \\ \hline
+    \textbf{Output} & Boolean value \\ 
+  \end{tabular}}
+  \caption{checkImages}
+\end{table}
+
+\subsubsection{getImages}
+\paragraph{Use}
+Obtain images from SD card in the Raspberry Pi and prompts user for a local location to store images.
+\paragraph{Access Programs}
+\begin{itemize}
+	\item Raspberry Pi OS
+\end{itemize}
+\begin{table}[H]
+  \makebox[\textwidth][c]{
+  \begin{tabular}{rp{8cm}} 
+    \textbf{Name} & getImages \\ \hline
+    \textbf{Parameter} & Images folder path \\ \hline
+    \textbf{Output} & Folder path with images from SD Card \\ 
+  \end{tabular}}
+  \caption{getImages}
+\end{table}
+
+\subsubsection{imagesToPointCloud}
+\paragraph{Use}
+The user is prompted to enter local location they want to store point cloud file at.
+
+\paragraph{Access Programs}
+\begin{itemize}
+	\item getImages 
+    \item insight3D\textcolor{red}{*}
+\end{itemize}
+\begin{table}[H]
+  \makebox[\textwidth][c]{
+  \begin{tabular}{rp{8cm}} 
+    \textbf{Name} & imagesToPointCloud \\ \hline
+    \textbf{Parameter} & Images folder path \\ \hline
+    \textbf{Output} & File path containing the dense point cloud \\ \hline
+    \textbf{Description} & Using the collection of images from the quad-copter generates a densely populated point cloud.
+  \end{tabular}}
+  \caption{imagesToPointCloud}
+\end{table}
+
+\subsubsection{pointCloudToModel}
+\paragraph{Use}
+Re-create the model using the point cloud generated file.
+\paragraph{Access Programs}
+\begin{itemize}
+	\item imagesToPointCloud
+    \item MeshLab
+\end{itemize}
+\begin{table}[H]
+  \makebox[\textwidth][c]{
+  \begin{tabular}{rp{8cm}} 
+    \textbf{Name} & pointCloudToModel \\ \hline
+    \textbf{Parameter} & Point cloud file \\ \hline
+    \textbf{Output} & 3D Model file \\ \hline
+    \textbf{Description} & Uses the densely populated point cloud to output a 3D model file.
+  \end{tabular}}
+  \caption{pointCloudToModel}
+\end{table}
+
+\newpage
+
+\subsection{Camera Modules}
+\subsubsection{cameraInit}
+\paragraph{Use}
+Initiates camera control module.
+\paragraph{Access Programs}
+\begin{itemize}
+\item cameraControl
+\end{itemize}
+\begin{table}[H]
+  \makebox[\textwidth][c]{
+  \begin{tabular}{rp{8cm}} 
+    \textbf{Name} & cameraInit \\ \hline
+    \textbf{Parameter} & n/a \\ \hline
+    \textbf{Output} & Camera control initialization signal \\ \hline
+    \textbf{Description} & Loads the cameraControl module into boot.
+  \end{tabular}}
+  \caption{cameraInit}
+\end{table}
+
+\subsubsection{cameraControl}
+\paragraph{Use}
+Control the camera attachment on the Raspberry Pi.
+\paragraph{Access Programs}
+\begin{itemize} 
+\item Physical camera
+\end{itemize}
+\begin{table}[H]
+  \makebox[\textwidth][c]{
+  \begin{tabular}{rp{8cm}} 
+    \textbf{Name} & cameraControl \\ \hline
+    \textbf{Parameter} & Camera control initialization signal, system state \\ \hline
+    \textbf{Output} & 1280 x 720 (720p) jpg files \\ \hline
+    \textbf{Description} & Signals the camera to take pictures.
+  \end{tabular}}
+  \caption{cameraControl}
+\end{table}
+
+\subsubsection{cameraEmergency}
+\paragraph{Use}
+Kills the cameraControl module in the case of emergency
+\paragraph{Access Programs}
+\begin{itemize} 
+\item cameraControl
+\end{itemize}
+\begin{table}[H]
+  \makebox[\textwidth][c]{
+  \begin{tabular}{rp{8cm}} 
+    \textbf{Name} & cameraEmergency \\ \hline
+    \textbf{Parameter} & System state \\ \hline
+    \textbf{Output} & n/a \\ \hline
+    \textbf{Description} & In the case of the system entering an unexpected or error state, this module kills the cameraControl module.
+  \end{tabular}}
+  \caption{cameraEmergency}
+\end{table}
+
+\newpage
+
+\subsection{Flight Module}
+
+\subsubsection{Flight Planner}
+
+\paragraph{Use}
+Creates a flight path for the quad-copter to follow the curvature of the object by moving parallel with the object and to the right.
+
+\paragraph{Access Programs}
+\begin{itemize} 
+\item monitorObjectDist
+\item monitorGroundDist
+\item monitorStDist
+\item motorThrustControl
+\end{itemize}
+
+\begin{table}[H]
+  \makebox[\textwidth][c]{
+  \begin{tabular}{rp{8cm}} 
+    \textbf{Name} & flightPlanning \\ \hline
+    \textbf{Parameter} &  distFromObjF, distFromObjL, distFromObjR, distFromGround, system state\\ \hline
+    \textbf{Output} & pitch, yaw, roll, throttle\\ \hline
+    \textbf{Description} & Determines desired pitch, yaw, roll, and throttle for flight path based on sensor readings.
+  \end{tabular}}
+  \caption{flightPlanning}
+\end{table}
+
+\subsubsection{Control Motor Thrusts}
+\paragraph{Use}
+Transform pitch, yaw, roll, and throttle signals into individual motor thrust.
+\paragraph{Access Programs}
+n/a
+\begin{table}[H]
+  \makebox[\textwidth][c]{
+  \begin{tabular}{rp{8cm}} 
+    \textbf{Name} & motorThrustControl \\ \hline
+    \textbf{Parameter} & pitch, yaw, roll, throttle \\ \hline
+    \textbf{Output} & four thrust signals, one corresponding to each motor \\ \hline
+    \textbf{Description} & Controls individual motor thrusts while accounting for outside forces on the quad-copter
+  \end{tabular}}
+  \caption{motorThrustControl}
+\end{table}
+
+\subsubsection{Manual Control}
+\paragraph{Use}
+Allows manual takeover of controls to prevent crashes and other unwanted behaviour.
+\paragraph{Access Programs}
+n/a
+\begin{table}[H]
+  \makebox[\textwidth][c]{
+  \begin{tabular}{rp{8cm}} 
+    \textbf{Name} & manualControlsOverride \\ \hline
+    \textbf{Parameter} & RC transmitter signals \\ \hline
+    \textbf{Output} & pitch, yaw, roll, throttle \\ \hline
+    \textbf{Description} & Replaces flight planner's control signals if it receives a signal from the RC transmitter
+  \end{tabular}}
+  \caption{manualControlsOverride}
+\end{table}
+
+\newpage
+
+\subsection{Battery Management System}
+
+\subsubsection{Start Up}
+\paragraph{Use}
+Close relay so that other system components can get power.
+\paragraph{Access Programs}
+n/a
+\begin{table}[H]
+  \makebox[\textwidth][c]{
+  \begin{tabular}{rp{8cm}} 
+    \textbf{Name} &  startup \\ \hline
+    \textbf{Parameter} & startupSignal \\ \hline
+    \textbf{Output} & n/a \\ \hline
+    \textbf{Description} & Enables power transfer from battery to other system components
+  \end{tabular}}
+  \caption{startup}
+\end{table}
+
+\subsubsection{Emergency Shutdown}
+\paragraph{Use}
+Open relay in the case of an emergency and completely shutdown system
+
+\paragraph{Access Programs}
+\begin{itemize}
+\item monitorBatV
+\item monitorBatT
+\end{itemize}
+\begin{table}[H]
+  \makebox[\textwidth][c]{
+  \begin{tabular}{rp{8cm}} 
+    \textbf{Name} &  emergencyShutdown \\ \hline
+    \textbf{Parameter} & shutdownSignal \\ \hline
+    \textbf{Output} & n/a \\ \hline
+    \textbf{Description} & Disables power transfer from battery to other system components
+  \end{tabular}}
+  \caption{emergencyShutdown}
+\end{table}
+
+\subsubsection{Monitor Battery Voltage}
+\paragraph{Use}
+Measure battery voltage and cuts off system power if voltage goes outside safe operating range.
+\paragraph{Access Programs}
+\begin{itemize}
+\item emergencyShutdown
+\end{itemize}
+\begin{table}[H]
+  \makebox[\textwidth][c]{
+  \begin{tabular}{rp{8cm}} 
+    \textbf{Name} & monitorBatV \\ \hline
+    \textbf{Parameter} & battery leads \\ \hline
+    \textbf{Output} & shutdownSignal, batteryVoltage  \\ \hline
+    \textbf{Description} & Reads battery voltage continuously and compares against minimum and maximum voltage limits
+  \end{tabular}}
+  \caption{monitorBatV}
+\end{table}
+
+\subsubsection{Monitor Battery Temperature}
+\paragraph{Use}
+Measure battery temperature and cuts off system power if temperature goes outside safe operating range.
+\paragraph{Access Programs}
+\begin{itemize}
+\item emergencyShutdown
+\end{itemize}
+\begin{table}[H]
+  \makebox[\textwidth][c]{
+  \begin{tabular}{rp{8cm}} 
+    \textbf{Name} & monitorBatT \\ \hline
+    \textbf{Parameter} & n/a \\ \hline
+    \textbf{Output} & shutdownSignal, batteryTemp \\ \hline
+    \textbf{Description} & Reads battery temperature continuously and compares against maximum temperature limit
+  \end{tabular}}
+  \caption{monitorBatT}
+\end{table}
+
+\newpage
+
+\subsection{Environment Sensing}
+
+
+\subsubsection{monitorGroundDist}
+\paragraph{Use}
+This module monitors (using a downward facing sensor) the quad-copter's distance from the ground.
+\paragraph{Access Programs}
+\begin{itemize}
+	\item System State
+\end{itemize}
+\begin{table}[H]
+  \makebox[\textwidth][c]{
+  \begin{tabular}{rp{8cm}} 
+    \textbf{Name} & monitorGroundDist \\ \hline
+    \textbf{Parameter} & init signal \\ \hline
+    \textbf{Output} & Distance from ground surface in meters \\ \hline
+    \textbf{Description} & Detects the distance between the quad-copter and the ground.
+  \end{tabular}}
+  \caption{monitorGroundDist}
+\end{table}
+
+\subsubsection{monitorObjectDist}
+\paragraph{Use}
+This module monitors (using three side-facing sensors) the quad-copter's distance from the scanned object as well as any other objects surrounding it.
+\paragraph{Access Programs}
+\begin{itemize}
+	\item System State 
+\end{itemize}
+\begin{table}[H]
+  \makebox[\textwidth][c]{
+  \begin{tabular}{rp{8cm}} 
+    \textbf{Name} & monitorObjectDist \\ \hline
+    \textbf{Parameter} & init signal \\ \hline
+    \textbf{Output} & Distance from the front, right and left surfaces in meters \\ \hline
+    \textbf{Description} & Detects the distance between the quad-copter and all objects in front of it as well as to it's right and left.
+  \end{tabular}}
+  \caption{monitorObjectDist}
+\end{table}
+
+\subsubsection{monitorStartDisp}
+\paragraph{Use}
+This module monitors the quad-copter's displacement from the initial starting position using all of the available sensors as well as a timer to deduce the distance travelled.
+\paragraph{Access Programs}
+\begin{itemize}
+	\item System State
+    \item monitorGroundDist
+    \item monitorObjectDist
+\end{itemize}
+\begin{table}[H]
+  \makebox[\textwidth][c]{
+  \begin{tabular}{rp{8cm}} 
+    \textbf{Name} & monitorStartDist \\ \hline
+    \textbf{Parameter} & init signal \\ \hline
+    \textbf{Output} & Distance travelled since the start of scan \\ \hline
+    \textbf{Description} & Detects the distance between the quad-copter and all objects in front of it as well as to it's right and left.
+  \end{tabular}}
+  \caption{monitorStartDist}
+\end{table}
+\newpage
+
+
+
+
+\section{Module Internal Design}
+The below \textit{Module Internal Design} (MID) depicts the internal structures of the mentioned modules.
+
+\subsection{Model Generation}
+\subsubsection{checkImages}
+\paragraph{Global Variables}
+~
+\begin{table}[H]
+  \makebox[\textwidth][c]{
+      \begin{tabular}{p{5cm}p{6cm}p{2cm}} 
+          \multicolumn{1}{c}{\textbf{Name}} & \multicolumn{1}{c}{\textbf{Description}} & \multicolumn{1}{c}{\textbf{Type}} \\ \hline 
+          \texttt{N/A} & N/A & N/A
+      \end{tabular}}
+  \caption{checkImages}
+\end{table}
+\paragraph{Access Programs}
+\begin{itemize}
+\item Raspberry Pi OS
+\end{itemize}
+\paragraph{Internal Programs}
+This module will determine if there are images stored on the SD Card. If there are it will output a true value, if not it will output a false value.
+
+
+\subsubsection{getImages}
+
+\paragraph{Global Variables}
+~
+\begin{table}[H]
+  \makebox[\textwidth][c]{
+      \begin{tabular}{p{5cm}p{6cm}p{2cm}} 
+          \multicolumn{1}{c}{\textbf{Name}} & \multicolumn{1}{c}{\textbf{Description}} & \multicolumn{1}{c}{\textbf{Type}} \\ \hline 
+          \texttt{N/A} & N/A & N/A
+      \end{tabular}}
+  \caption{getImages}
+\end{table}
+
+\paragraph{Access Programs}
+\begin{itemize}
+\item Raspberry Pi OS
+\end{itemize}
+
+\paragraph{Internal Programs}
+This module will be the first thing to run after a link has been established to the quad-copter's SD Card. It is responsible for extracting the images from the SD Card and storing them to a local folder at the user specified path.
+
+\subsubsection{imagesToPointCloud}
+
+\paragraph{Global Variables}
+~
+\begin{table}[H]
+  \makebox[\textwidth][c]{
+      \begin{tabular}{p{5cm}p{6cm}p{2cm}} 
+          \multicolumn{1}{c}{\textbf{Name}} & \multicolumn{1}{c}{\textbf{Description}} & \multicolumn{1}{c}{\textbf{Type}} \\ \hline 
+          \texttt{N/A} & N/A & N/A\\
+      \end{tabular}}
+  \caption{imagesToPointCloud}
+\end{table}
+
+\paragraph{Access Programs}
+\begin{itemize}
+	\item getImages 
+    \item insight3D\textcolor{red}{*}
+\end{itemize}
+
+\paragraph{Internal Programs}
+This module will be executed when all images from the SD Card have been successfully stored in a local folder. This module will then take the folder path and feed the images into insight3D which will create a densely populated point cloud. This point cloud file will then be exported to a user specified location.
+
+\subsubsection{pointCloudToModel}
+\paragraph{Global Variables}
+~
+\begin{table}[H]
+  \makebox[\textwidth][c]{
+      \begin{tabular}{p{5cm}p{6cm}p{2cm}} 
+          \multicolumn{1}{c}{\textbf{Name}} & \multicolumn{1}{c}{\textbf{Description}} & \multicolumn{1}{c}{\textbf{Type}} \\ \hline 
+          \texttt{pointCloudFilePath} & The location where the user wants to store the images from the SD Card. & String\\
+          \texttt{modelFilePath} & The location where the user wants to store the model file. & String
+      \end{tabular}}
+  \caption{pointCloudToModel}
+\end{table}
+\paragraph{Access Programs}
+\begin{itemize}
+	\item imagesToPointCloud
+    \item MeshLab
+\end{itemize}
+\paragraph{Internal Programs}
+This module will be the last to execute in the sequence. It is responsible for taking the densely populated point cloud and using MeshLab to reconstruct 3D Model. This model file will be outputted to the location specified by the user.
+\newpage
+
+\subsection{CameraModule}
+
+\subsubsection{CameraInit}
+
+\paragraph{Global Variables}
+
+
+n/a
+
+
+\paragraph{Access Programs}
+\begin{itemize}
+\item Boot loader
+\item CameraControl
+\end{itemize}
+
+\paragraph{Internal Programs}
+During startup of the raspberry pi, this module is executed at some point. Upon execution CameraInit will initiate the cameraControl module to run as a background process, which in turn will run until the quadCopter powers down.
+
+\subsubsection{CameraControl}
+
+\paragraph{Global Variables}
+~
+\begin{table}[H]
+  \makebox[\textwidth][c]{
+      \begin{tabular}{p{5cm}p{6cm}p{2cm}} 
+          \multicolumn{1}{c}{\textbf{Name}} & \multicolumn{1}{c}{\textbf{Description}} & \multicolumn{1}{c}{\textbf{Type}} \\ \hline 
+          \texttt{emergency} & An emergency control variable which sets \texttt{cameraOK=false} and is itself set to true when there is a signal from \texttt{override} & boolean \\ \hline
+          \texttt{override} & A signal from the receiver. If one is detected then \texttt{emergency=true} & analogue 
+  \end{tabular}}
+  \caption{CameraControl}
+\end{table}
+
+\paragraph{Access Programs}
+\begin{itemize} 
+	\item Phisical camera
+\end{itemize}
+
+\paragraph{Internal Programs}
+CameraControl is a cyclic executive C program that will signal the camera attachment to take a picture every cycle so long as \texttt{cameraOk==True}. \texttt{cameraOk} is initialized in 
+cameraControl as true by default. \texttt{cameraOk} is set to False if emergency is set to True, thus halting the picture taking process. there is no way to set \texttt{cameraOk} back to true short of restarting the quad-copter. Emergency is set to true if there is a signal detected in override, or in other designated fail states that will be determined at a later date.
+
+
+
+
+
+\subsubsection{CameraEmergency}
+
+\paragraph{Global Variables}
+~
+\begin{table}[H]
+\makebox[\textwidth][c]{
+      \begin{tabular}{p{5cm}p{6cm}p{2cm}} 
+          \multicolumn{1}{c}{\textbf{Name}} & \multicolumn{1}{c}{\textbf{Description}} & \multicolumn{1}{c}{\textbf{Type}} \\ \hline 
+          \texttt{SState} & A control variable from the raspberry pi that denotes system state & String
+  \end{tabular}}
+  \caption{CameraEmergency}
+\end{table}
+
+\paragraph{Access Programs}
+\begin{itemize}
+\item CameraControl
+\end{itemize}
+
+\paragraph{Internal Programs}
+CameraEmergency monitors SState in order to determine if the quad-copter is in a state of emergency. in such a case CameraEmergency kills the CameraControl process in order to save processing power to returning the system to a safe state.
+
+\newpage
+
+\subsection{Flight Module}
+\subsubsection{Flight Planner}
+
+\paragraph{Global Variables}
+n/a
+
+\paragraph{Access Programs}
+\begin{itemize} 
+\item monitorObjectDist
+\item monitorGroundDist
+\item monitorStDist
+\item motorThrustControl
+\end{itemize}
+\paragraph{Internal Programs}
+The flight planner software uses the information from the sensors and gyros to determine the throttle, pitch, yaw, and roll for the quad-copter such that moves parallel with the surface in front of it, tracing it to the right. 
+
+\subsubsection{Control Motor Thrusts}
+\paragraph{Global Variables}
+n/a
+\paragraph{Access Programs}
+\begin{itemize}
+\item manualControlsOverride
+\end{itemize}
+\paragraph{Internal Programs}
+Takes in pitch, yaw, roll and throttle signals and generates a value of thrust for each individual motor. Uses feedback from internal accelerometers and gyroscopes to keep flight stable.
+
+\subsubsection{Manual Control}
+\paragraph{Global Variables}
+n/a
+\paragraph{Access Programs}
+\begin{itemize}
+\item motorThrustControl
+\end{itemize}
+\paragraph{Internal Programs}
+Allows for the user to take over manual control of the quad-copter in the event of a flight planner failure. Manual control is initiated by sending a non-zero throttle signal from the transmitter. Once manual control is initiated, it may not be turned off for the duration of the flight, to prevent the flight planner from trying to send conflicting signals.
+
+
+\subsection{Battery Management System}
+\subsubsection{Start Up}
+\paragraph{Global Variables}
+n/a
+\paragraph{Access Programs}
+n/a
+\paragraph{Internal Programs}
+Once input signal is detected, a small internal battery is used to hold the relay closed until the rest of the system can be initialized. Once the system has start up, the main battery can be used to hold the relay closed, so as not to needlessly consume auxiliary battery power.
+
+\subsubsection{Emergency Shutdown}
+\paragraph{Global Variables}
+n/a
+\paragraph{Access Programs}
+\begin{itemize}
+\item monitorBatV
+\item monitorBatT
+\end{itemize}
+\paragraph{Internal Programs}
+Opens relay when any fault is detected, from the battery or otherwise, in order to cut off power from the entire system. This module is activated as a worst case scenario in order to prevent damage to the system.
+
+\subsubsection{Monitor Battery Voltage}
+\paragraph{Global Variables}
+n/a
+\paragraph{Access Programs}
+\begin{itemize}
+\item emergencyShutdown
+\end{itemize}
+\paragraph{Internal Programs}
+Continuously monitor the voltage across the battery leads. Automatically send a emergency shutdown signal to the emergencyShutdown module if the monitored voltage is less than the minimum voltage or more than the maximum voltage. This monitored signal may be passed through a low-pass filter in order to prevent accidental shutdown from erroneous readings.
+
+\subsubsection{Monitor Battery Temperature}
+\paragraph{Global Variables}
+n/a
+\paragraph{Access Programs}
+\begin{itemize}
+\item emergencyShutdown
+\end{itemize}
+\paragraph{Internal Programs}
+Continuously monitor the temperature from a sensor mated to the battery. Automatically send a emergency shutdown signal to the emergencyShutdown module if the monitored temperature higher than the maximum temperature. This monitored signal may be passed through a low-pass filter in order to prevent accidental shutdown from erroneous readings.
+
+
+\newpage
+
+\subsection{Environment Sensing}
+\subsubsection{monitorGroundDist}
+\paragraph{Global Variables}
+~
+\begin{table}[H]
+\makebox[\textwidth][c]{
+      \begin{tabular}{p{5cm}p{6cm}p{2cm}} 
+          \multicolumn{1}{c}{\textbf{Name}} & \multicolumn{1}{c}{\textbf{Description}} & \multicolumn{1}{c}{\textbf{Type}} \\ \hline 
+          \texttt{downDist} & Detect the distance of the quad-copter from the ground. & Long
+      \end{tabular}}
+  \caption{monitorGroundDist}
+\end{table}
+\paragraph{Access Programs}
+n/a 
+\paragraph{Internal Programs}
+monitorGroundDist will relay the distance measured from the ground to the flight controller and state machine in order to decide whether or not the quad-copter is behaving as desired (either landing, too close to the ground, too far from the ground).
+
+\subsubsection{monitorObjectDist}
+\paragraph{Global Variables}
+~
+\begin{table}[H]
+\makebox[\textwidth][c]{
+      \begin{tabular}{p{5cm}p{6cm}p{2cm}} 
+          \multicolumn{1}{c}{\textbf{Name}} & \multicolumn{1}{c}{\textbf{Description}} & \multicolumn{1}{c}{\textbf{Type}} \\ \hline 
+          \texttt{frontDist} & Detect the distance between the quad-copter and objects in front of it. & Long \\ \hline 
+          \texttt{rightDist} & Detect the distance between the quad-copter and objects to the right of it. & Long \\ \hline 
+          \texttt{leftDist} & Detect the distance between the quad-copter and objects to the left of it. & Long
+      \end{tabular}}
+  \caption{monitorObjectDist}
+\end{table}
+\paragraph{Access Programs}
+n/a 
+\paragraph{Internal Programs}
+monitorObjectDist will relay the distance measured from the objects to the right, left and in front of the quad-copter to the flight controller and state machine in order to decide whether or not the quad-copter is behaving as desired (too close to object being scanned, too close to objects around it).
+
+\subsubsection{monitorStartDisp}
+\paragraph{Global Variables}
+~
+\begin{table}[H]
+\makebox[\textwidth][c]{
+      \begin{tabular}{p{5cm}p{6cm}p{2cm}} 
+          \multicolumn{1}{c}{\textbf{Name}} & \multicolumn{1}{c}{\textbf{Description}} & \multicolumn{1}{c}{\textbf{Type}} \\ \hline 
+          \texttt{startDist\_x} & Distance travelled in the x-plane relative to the starting position. & Long \\ \hline
+          \texttt{startDist\_y} & Distance travelled in the y-plane relative to the starting position. & Long \\ \hline
+          \texttt{startDist\_z} & Distance travelled in the z-plane relative to the starting position. & Long
+      \end{tabular}}
+  \caption{Example subsubmodule}
+\end{table}
+\paragraph{Access Programs}
+\begin{itemize}
+\item monitorGroundDist
+\item monitorObjectDist
+\end{itemize}
+\paragraph{Internal Programs}
+monitorStartDisp estimates the displacement travelled by the quad-copter while flying and scanning the object in question in order to determine when it has completed a full revolution.
+
+
+\newpage
+
+
+\section{Scheduling}
+The timing and scheduling constraints of the system components will be discussed in this section. 
+
+\subsection{Derived Timing Constraints}
+	The flight controller must be able to poll and receive input back from the sensors fast enough to be able to adjust the flight path without crashing the quad-copter. This is a hard real-time constraint, as if this timing constraint isn't met the system will fail.
+    
+   There is a hard real-time constraint on how quickly the props controller will send the signals for pitch, yaw, roll, and thrust to the motors such that it follows the flight planner within reasonable error.
+
+The camera must take a picture on a set interval, but this is a firm real-time constraint. Pictures will be taken in excess, so a few missed pictures can be tolerated. Pictures will only be usable in the right time frame when the quadcopter is stopped as to stop motion blur, hence why it's important to meet the schedule.
+
+
+
+
+
+\end{document}

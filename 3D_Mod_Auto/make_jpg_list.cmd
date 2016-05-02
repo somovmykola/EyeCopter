@@ -1,0 +1,1 @@
+FOR %%x IN ( *.jpg ) do echo %%x >> my_jpg_list.txt

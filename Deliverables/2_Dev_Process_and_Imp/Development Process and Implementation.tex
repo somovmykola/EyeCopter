@@ -1,0 +1,276 @@
+\documentclass[10pt,letterpaper]{article}
+\setlength{\paperheight}{11in}
+\setlength{\paperwidth}{8.5in}
+\usepackage[ascii]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{soul}
+\usepackage{array}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\usepackage{latexsym}
+\usepackage{hyperref} % Inserts hyper-references in the table of contents
+\hypersetup{
+	colorlinks,
+	citecolor=black,
+	filecolor=black,
+	linkcolor=black,
+	urlcolor=black
+}
+\usepackage{tikz} 			% Diagrams
+\usetikzlibrary{arrows}		% Diagrams
+\usepackage{verbatim}		% Diagrams
+\tikzstyle{int}=[draw, fill=blue!20, minimum size=2em]
+\tikzstyle{init} = [pin edge={to-,thin,black}]
+
+
+\begin{document}
+	
+	% TITLE PAGE
+	
+	\begin{titlepage}
+		\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+		\center
+		
+		\textsc{\LARGE McMaster University}\\[1.5cm] % Name of your university/college
+		\textsc{\Large Development Process \& Implementation}\\[0.5cm] % Major heading such as course name
+		\textsc{\large 4G06 Capstone Design Project}\\[0.5cm] % Minor heading such as course title
+		
+		\HRule \\[0.4cm]
+		{ \huge \bfseries 3D Scanning Quadcopter \\[2mm] \textit{A Large Scale 3D Scanner}}\\[0.4cm] % Title of your document
+		\HRule \\[1.5cm]
+		
+		\begin{tabular}{ccc}
+			\bf{Paul Correia}		& \bf{Nicolas Lelievre} 	& \bf{Bennett Mackenzie}		\\
+			Mechatronics Eng 		& Software Eng 				& Software Eng 					\\
+			\textit{1132370} 		& \textit{1203446}			& \textit{1211985} 				\\ \\
+			\bf{Tigran Martikian} 	& \bf{Balraj Shah} 			& \bf{Mykola Somov} 			\\
+			Software Eng			& Software Eng				& Software Eng 					\\
+			\textit{1213170} 		& \textit{1207997}			& \textit{1141160}
+		\end{tabular}\\[4cm]
+		
+		{\large October 20, 2015}\\[3cm] 
+		
+		%\includegraphics{Logo}\\[1cm] % Include a department/university logo - this will require the graphicx package
+		
+		\vfill % Fill the rest of the page with whitespace
+		
+	\end{titlepage}
+	
+	
+\tableofcontents
+
+\newpage
+	
+
+\section{Project Proposal Revision}
+\subsection{Project Description}
+We propose for our capstone project, a quadcopter that can scan an object (tentatively around the order of one to two meters, possibly scaled higher) and produce a 3D model that can be scaled down and 3D printed. \par 
+Our initial impressions are to have the quadcopter scan the object (using either image processing, lidar detection or a combination thereof) by circling said object to be scanned and convert the captured data to a 3D model file for examination and potentially 3D printed at a scaled down size. \par 
+As far as our research has revealed, no large scale automated three dimensional scanning peripherals currently exist, giving our project both meaning in versatile and real life application as well as focus and exposure within an emerging industry.
+
+\subsection{Required Skills \& Engineering Knowledge}
+Our group will necessitate knowledge in a variety of fields including basic quadcopter operation, real-time flight automation, real-world to model mapping conversion and model scaling/3D printing. \par 
+Luckily, both quadcopters and 3D printers have reached a certain level of popularity in numerous fields resulting in high levels of documentation, scalability and customisation with minimal resources required. \par 
+The challenge will rest with automating the quadcopter's control and operations with regard to properly scanning a large-scale physical object with reliable and sufficient accuracy to then be converted into digital 3D model formats suitable for printing. \par 
+These necessary skills and knowledge base, however, do not surpass our abilities as engineers.
+
+\subsection{Group Composition}
+We believe our group composition is very capable of this task. \par 
+The level of mechanical expertise necessary to complete this project is well within our abilities, given that quadcopters are well-documented in terms of design and customisability. Also note that we have a mechatronics student to aid with both electrical and physical design. \par 
+Software design will be the bulk of the challenge of this project. Specifically, generating the 3D model from the sensor(s) as well as the control software utilised to fly and automate the quadcopter's operations. The software itself will be where most of the complexity lies, which is fitting due to the fact that the majority of our group consists of software engineers. \par 
+Planning ahead, our proof of concept due in December could be a functioning quadcopter and/or proof that valuable information is gatherable and accurate enough for use in generated 3D models.
+
+\subsection{Clarifications}
+A few clarifications regarding our project. The project will consist of a drone with a camera on board. It will store a 360 degree set of images of the object being scanned. In the event that the object is taller than the camera's field of vision (with respect to the object's height) the drone will move into position for multiple orbits around the object until it reaches the top of the scan. This information will then be used in order to render a 3D model of the object which will then be available for 3D printing. \par 
+A key aspect of this project is the removal of the human element. The drone will be autonomous in the sense that once it begins scanning there will be no further need for human interaction. It will also allow humans to scan objects too large or irregular in shape for manual scanning.
+
+
+\newpage
+
+\section{Roles \& Responsibilities}
+Below are the projected roles and responsibilities for all members of the group. Please note that these are not exclusive and members are expected to contribute to a variety (if not all) aspects of the final product. 
+
+\subsection{Paul Correia}
+Paul Correia will be working on the Quadcopter team, specifically mechanical design and specifications as well as electrical circuit design and power systems. He will be collaborating with Ben Mackenzie and Nicolas Lelievre on the Quadcopter's overall functionality.  \par
+His experience in robotics design and testing will allow him to design reliable electromechanical systems with appropriate safety tolerances. Paul will also contribute to impartial testing and verification of all non-embedded software systems, specifically the image processing systems.
+
+\subsection{Nicolas Lelievre} 
+Nicolas Lelievre will be working with Paul Correia and Ben Mackenzie in concentrating on the quadcopter's overall functionalities. More specifically, he will help design, build and test the quadcopter from basic parts as well as design the quadcopter's launchpad. \par 
+His experience in software engineering and control systems will allow him to assist in the flight controller's design and testing as well as tend to the above mentioned tasks. Initial testing of the quadcopter will be conducted by the quadcopter team, however more elaborate tests will involve members of the 3D scanning team in order to ensure proper separation of tasks. 
+
+\subsection{Bennett Mackenzie} 
+Ben Mackenzie will be working on the Quadcopter team, specifically Quadcopter Design and Control Systems Design for the Quadcopter. He will be collaborating with Paul Correia and Nicolas Lelievre on this aspect of the project. He has experience working with electrical design on robots and working with software, making him a good fit for the job. \par 
+Preliminary testing and analysis of Ben's work may be done by the Quadcopter team, followed by a walkthrough with the Sensor team to ensure impartial review of any design.
+
+\subsection{Tigran Martikian} 
+Tigran Martikian will be working on the development of the 3D model. As part of the sensor and image processing team, alongside Balraj Shah and Mykola Somov, we will be working together to take 2D images and convert them into a 3D model. Tigran, will also be assisting with data transmission between the sensor and quadcopter \par
+He will also assist in testing the quadcopter and sensors. Further testing and verification will be done by all members of the group.
+
+\subsection{Balraj Shah}
+Balraj Shah will be working on the development of the sensor portion of this project with Tigran Martikian and Mykola Somov. He has experience with software development which will make him an asset in creating a method/program for extracting a 3D model from a set of 2D images. Furthermore, he will assist in the transmission of data between the sensor and any storing device.\par
+The preliminary testing and verification will be done by all members working on the sensor portion. Further verification of functionality and any overlooked aspect in regards to the sensor will be done by the Quadcopter team. Testing and verification of data transmission will be done by both groups collaboratively.
+
+\subsection{Mykola Somov} 
+Mykola Somov will be working with Tigran Martikian and Balraj Shah for the explicit purpose of designing the software and mechanism of the sensor functionality of the quadcopter. He will prioritize his work in modifying existing software designs and algorithms to meet the sensor needs of the quadcopter's overall functionality. Mykola will also contribute to preliminary functional testing as well as code revision. \par
+Mykola's education in software  engineering as well as industry experience in functional testing of code  will allow him to perform these tasks with a high degree of quality and professionalism. 
+
+\newpage 
+
+
+\section{Process Workflow}
+The workflow process described in the following sections is subject to change throughout the project and should not be taken as a final structure.
+
+\subsection{Steps}
+Due to the fact that this project comprises of several distinctly different parts, most of the development will be achieved concurrently. This being said, the bulk of the endeavour may be divided into two main sections: a functioning quadcopter and a functioning large-scale three-dimensional scanner. The two halves will be integrated within one another once they have reached acceptable independent functionality. 
+\begin{enumerate}
+	\item \textbf{Necessary Parts} Processes necessary to determine what hardware and software will be required for the quadcopter and scanner. 
+	\begin{enumerate}
+		\item Design feasible quadcopter
+		\item Design feasible 3D scanner
+		\item Cost analysis 
+		\item Acquire (purchase or make) all necessary parts
+	\end{enumerate}
+	\item \textbf{Quadcopter} Designing a fully functional and automated quadcopter.
+	\begin{enumerate}
+		\item Assemble basic quadcopter capable of sustaining all component weight
+		\item Add quadcopter flight controller
+		\item Manipulate flight controller to allow automated flight trajectories
+		\item Design launchpad for distance and position locating as well as homing
+	\end{enumerate}
+	\item \textbf{Three-Dimensional Scanner} This step applies to the 3D scanner and all applications necessary to render it functional.
+	\begin{enumerate}
+		\item Assemble basic 3D scanner capable of scanning objects
+		\item Ensure 3D scanner functions in continuous motion (ie. during flight)
+		\item 3D scanner returns usable and accurate data
+		\item Convert data into 3D model
+	\end{enumerate}
+	\item \textbf{Integration} This final step includes the integration of the functioning quadcopter and 3D scanner.
+	\begin{enumerate}
+		\item Secure 3D scanner onboard quadcopter
+		\item Retrieve usable and accurate data from flight
+		\item Convert 3D scans to 3D models
+		\item Print model using 3D printer
+	\end{enumerate}
+\end{enumerate}
+
+Note that the above steps are a general high-level overview and do not take into account any necessary revisions or extensive testing made along the way. Also note that steps 2 and 3 (quadcopter and three-dimensional scanner, respectively) will be designed concurrently within the group. 
+
+\subsection{Inputs \& Outputs}
+The following is a high-level overview of the inputs and outputs required for a functioning system. \par 
+
+\begin{center}
+	\begin{tabular}{r c p{6cm}}
+		\textbf{input} & \textit{Proximity Sensor Distance} & Necessary to keep a safe distance from scanning object. \\ \\
+		\textbf{input} & \textit{Launchpad Distance} & Necessary to detect when the device has reached the initial launch position (full circumference scanned). \\ \\
+		\textbf{input} & \textit{Camera Pictures} & Necessary to analyse and create three-dimensional model. \\ \\
+		\textbf{output} & \textit{3D Model} & Result of all above inputs, the model should be an accurate digital representation of the real-world object.
+	\end{tabular}
+\end{center}
+
+
+\subsection{Acceptance Criteria}
+The acceptance criteria for the system relies entirely on the final output of the system and, as such, will be evaluated based on the resulting 3D model generated from all inputs. \par 
+Hence, an acceptable 3D model will be one that can be easily recognised by users familiar with the scanned object (either with, or without any colour mapping rendered on the surface of the model).
+
+\newpage
+
+
+\section{Process Tools}
+The below process tool will be used in the design and implementation of the large-scale 3D scanning quadcopter. 
+
+\begin{center}
+	\begin{tabular}{l p{8cm}}
+		\textbf{Arduino 1.6}  				& For embedded controls applications, we will be using Arduino due to its simplicity and ease of use. \\ \\
+		
+		\textbf{Autodesk Inventor 2014} 	& For the hardware design of the quadcopter, we will be using Autodesk Inventor. We chose this over other 3D CAD software due to our past experience using Inventor.\\ \\
+		
+		\textbf{CadSoft EAGLE 7.4 }			& If we need to design any custom PCBs, we will use CadSoft's EAGLE due to large library of standard components and ease of exporting for fabrication. The tolerances to which the PCB will be designed to, i.e, trace width, minimum drill size, etc., will depend on the manufacturer's design rules.\\ \\
+		
+		\textbf{Eclipse 4.5} 				& We will be using Eclipse as our IDE for non-embedded programming. Eclipse was chosen due to our group's familiarity with the Java programming language and Eclipse itself.\\ \\
+		
+		\textbf{git 2.0} 					& We will be using git for version control for reasons discussed in section 5.1\\ \\
+		
+		\textbf{OpenCV 2.4 }				& We will be using OpenCV for any image processing. We decided to use version 2.4.10 as opposed to the latest stable release 3.0.0 since this new release doesn't provide us with any vital new features. 2.4.10 is a mature release with very few open bugs and as such is well suited to our application.
+	\end{tabular}
+\end{center}
+
+\newpage
+
+
+\section{Version Control}
+\subsection{Using Version Control}
+As a group, we were deciding whether we should use SVN or Git to manage our version control. In the end we chose to use Git because we are familiar with github and its socially interactive coding experience. \par 
+One of the reasons we are using GitLab is it allows us to collaborate on a single codebase effectively. GitLab also allows us to resolve merge conflicts easily. It gives us the opportunity to work in our own branches and use a pull request system to get feedback on code before it is merged. As a group, we can discuss, comment, and improve each other's code in these pull requests. Git allows us to have a complete history of all our code and every version of each commit. Lastly, if something goes wrong in the future of our project, we can simply revert back to a working version from a previous date.
+
+\subsection{Changes in Development Artefacts}
+The following section details the means by which change requests and bug reports are documented and serviced. All bug reports, and change requests will be submitted on the project's gitlab page as an issue. The following section is not liable to change under any but the most extreme of circumstances. In such a case, the nature of the revision and its justification will be specified in the project's gitlab page as an issue with the 'MASTER CHANGE ORDER' label.
+
+\subsubsection{Changes and Bugs}
+All change requests and bug reports must be submitted as an issue with the most representative of one of the following identifications included as a label:
+
+\begin{enumerate}
+	\item[E1] A system critical bug which prevents the quadcopter from achieving controllable flight
+	\item[E2] A critical bug which prevents system requirements from being met
+	\item[E3] A bug which does not directly violate system requirements but induces strange system behaviour that may negatively impact user experience
+	\item[E4] A non-critical bug which causes unexpected system behaviour but is not likely to negatively impact user experience or violate system requirements
+	\item[E5] A suspicion of the existence of a bug
+	\item[C1] A change request to the system
+	\item[C2] A concern with the system without a change request specified 
+\end{enumerate}
+
+All new change requests and bug reports must include on what build and when the issue was first found. Bug reports must include instructions on how the bug was triggered as well as a copy of the error log if available. A bug report may also have its identification change with testing. In such a case the change, reason for change and time of change will be specified in a comment to the report. Change requests must include justification as to why a change should be applied.
+
+\subsubsection{Deposition}
+All change requests and bug reports must be reviewed by at least one project member whom did not originally report the issue, within 48 hours of the issue being posted. A reviewer must begin the process of deposition of E3 and higher level bug reports within 72 hours of reviewing the report. All other issues raised must begin the process within two weeks of review. The process of deposition is outlined bellow:
+
+\subsubsection{Bug Deposition}
+\begin{enumerate}
+	\item After a bug report has been reviewed, a reviewer must comment on the issue to denote that they have begun working on the issue
+	\item The reviewer must replicate the bug at least once and then add the 'confirmed' label to the issue 
+	\begin{enumerate}
+		\item If the bug cannot be replicated, the reviewer must add the 'unconfirmed' label to the issue instead and temporarily cease the deposition process
+		\item If a reviewer is later able to replicate the bug, the 'unconfirmed' label must be replaced with a 'confirmed' label and the deposition process continues
+	\end{enumerate}
+	\item Once a bug is confirmed the group must decide on a course of action based on the bug's severity
+	\begin{enumerate}
+		\item E2 and higher level bugs should have at least three group members prioritizing releasing a fix
+		\item E3 bugs should have at least one group member prioritizing releasing a fix 
+		\item Bugs of lower severity than E3 can be ignored until such a time that their severity increases higher than E4
+	\end{enumerate} 
+	\item When fix is ready, it is applied to the build, and a group member must comment on the bug indicating which build was applied
+	\item A group member reviews the new build to determine if they could still replicate the bug
+	\begin{enumerate}
+		\item If the bug cannot be replicated the reviewer must comment on the issue indicating what build fixed the bug and close the issue
+		\item If the bug can be replicated the reviewer must comment that the current build did not fix the bug, and the deposition process returns to step (2) until the issue can be closed
+	\end{enumerate}
+	\item If at a later time a group member is able to confirm that the same bug is still prevalent, the group member must reopen the issue, note what build the bug was rediscovered on, and under what conditions it occurred. The deposition process restarts in this case
+\end{enumerate}
+
+\subsubsection{Change Deposition}
+\begin{enumerate}
+	\item After a change request has been reviewed by at least four group members, all reviewers and the original poster should discuss the proposed changes
+	\item During discussion amendments can be made to the proposal
+	\begin{enumerate}
+		\item Once at least four group members are satisfied to the proposal, a comment must added indicating any amendments made to the proposal, the 'okay' label must be added, and at least one group member should be assigned to make the changes
+		\item Alternatively if five group members opt to veto the proposal, no changes are applied, the 'not applied' label is added to the proposal, and the proposal must be closed
+	\end{enumerate}
+	\item Once the changes are ready, they are applied to the build, and a comment must be added to proposal indicating what the new build this is
+	\item The group must then evaluate the new build to see if the new build satisfies the amended proposal
+	\begin{enumerate}
+		\item If the new build is satisfactory, the 'okay' label must be replaced with the 'applied' label, and the issue must be closed
+		\item If the new build is unsatisfactory, the deposition process returns to step (1)
+	\end{enumerate}
+\end{enumerate}
+
+\subsection{Accessing Version Control}
+We are using GitLab for our version control system as previously mentioned. \par 
+The repository for our project is available at: \\ \url{https://gitlab.cas.mcmaster.ca/mackeb/Group_13_Capstone.git} \par 
+Please contact \url{mackeb@mcmaster.ca} if any person needs to be given access to the repository. 
+
+
+
+
+\end{document}

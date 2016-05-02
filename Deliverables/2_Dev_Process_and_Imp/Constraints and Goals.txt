@@ -1,0 +1,25 @@
+CONSTRAINTS:
+
+6m x 6m MAX Width x Length
+6m Height MAX
+Relative Convex
+On the ground
+Indoor or outdoor as long s the object has x meters of clearance
+If outdoor, can't operate in rain/snow/high-winds etc.
+Object must be opaque
+Scan must complete within x minutes
+Quadcopter must be less than a certain size
+No bird-like features
+
+
+
+GOALS:
+
+Fully scan an object of a max size
+Fully autonomously scan
+Scan within a maximum of 30 minutes
+Output a 3D model capable of being 3d printed
+Scan objects up to 6 meters tall
+Quadcopter should be relatively small and light
+Entire system should be portable (cartable by a single person)
+Deployable by a single person

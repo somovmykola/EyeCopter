@@ -1,0 +1,487 @@
+\documentclass[10pt,letterpaper]{article}
+\setlength{\paperheight}{11in}
+\setlength{\paperwidth}{8.5in}
+\usepackage[ascii]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{gensymb}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{soul}
+\usepackage{array}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\usepackage{latexsym}
+\usepackage{pdfpages}
+\usepackage{chngpage}
+\usepackage{titlesec}
+\usepackage{hyperref} % Inserts hyper-references in the table of contents
+\hypersetup{
+	colorlinks,
+	citecolor=black,
+	filecolor=black,
+	linkcolor=black,
+	urlcolor=black
+}
+\usepackage{tikz} 			% Diagrams
+\usetikzlibrary{arrows}		% Diagrams
+\usepackage{verbatim}		% Diagrams
+\tikzstyle{int}=[draw, fill=blue!20, minimum size=2em]
+\tikzstyle{init} = [pin edge={to-,thin,black}]
+\usepackage{xfrac}			% Fractions with a diagonal line :)
+
+% Create a macro for the headings for each FMEA chart
+\newcommand{\fmeaheader}{\multicolumn{1}{c}{\textbf{Failure Modes}} & \multicolumn{1}{c}{\textbf{Effect of Failures}} & \multicolumn{1}{c}{\textbf{Causes of Failure}} & \multicolumn{1}{c}{\textbf{Detection}} & \multicolumn{1}{c}{\textbf{Actions}}}
+
+
+
+\begin{document}
+	
+	% TITLE PAGE
+	
+	\begin{titlepage}
+		\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+		\center
+		
+		\textsc{\LARGE McMaster University}\\[1.5cm] % Name of your university/college
+		\textsc{\Large Validation \& Verification}\\[0.5cm] % Major heading such as course name
+		\textsc{\large 4G06 Capstone Design Project}\\[0.5cm] % Minor heading such as course title
+		
+		\HRule \\[0.4cm] 
+		{ \huge \bfseries EyeCopter \\[2mm] \textit{A Large Scale 3D Modeller}}\\[0.4cm] % Title of your document
+		\HRule \\[1.5cm]
+		
+		\begin{tabular}{ccc}
+			\bf{Paul Correia}		& \bf{Nicolas Lelievre} 	& \bf{Bennett Mackenzie}		\\
+			Mechatronics Eng 		& Software Eng 				& Software Eng 					\\
+			\textit{1132370} 		& \textit{1203446}			& \textit{1211985} 				\\ \\
+			\bf{Tigran Martikian} 	& \bf{Balraj Shah} 			& \bf{Mykola Somov} 			\\
+			Software Eng			& Software Eng				& Software Eng 					\\
+			\textit{1213170} 		& \textit{1207997}			& \textit{1141160}
+		\end{tabular}\\[4cm]
+		
+		{\large February 29, 2016}\\[3cm] 
+		
+		%\includegraphics{Logo}\\[1cm] % Include a department/university logo - this will require the graphicx package
+		
+		\vfill % Fill the rest of the page with whitespace
+		
+	\end{titlepage}
+	
+    
+\thispagestyle{empty}
+
+\tableofcontents
+
+
+\newpage
+
+
+\thispagestyle{empty}
+
+\listoffigures
+
+\listoftables
+
+
+\newpage
+
+
+\thispagestyle{empty}
+
+\section*{Revisions}
+\vspace{1cm}
+\begin{center}
+\makebox[\textwidth][c]{
+  \begin{tabular}{cccc}
+      \hline 
+      \sc{Revision} & \sc{Date} & \sc{Authors} & \sc{Description of Revision} \\ \hline
+      0 & Feb 29, 2016 & $\begin{matrix} \text{Paul Correia} \\ \text{Nicolas Lelievre} \\ \text{Bennett Mackenzie} \\ \text{Tigran Martikian} \\ \text{Balraj Shah} \\ \text{Mykola Somov} \end{matrix}$ & Initial revision of the V\&V. 
+  \end{tabular}}
+\end{center}
+
+\newpage
+
+
+\section{Introduction}
+\subsection{System Purpose \& Background}
+The advent of three dimensional modelling has revealed many new possibilities in computer graphics used in a multitude of fields ranging from game design to medical applications. As of late, three dimensional scanners have become significantly more accessible to the average consumer and therefore have gained immense popularity among professionals and hobbyists alike. \par 
+The main focus of scanning three dimensional objects has however remained transfixed on a relatively small scale, often within a human's reach. Although some hand held three dimensional scanners offer high resolution scans and very detailed renderings, they are limited to house-hold object sizes meaning that larger objects are not easily scanned using such methods. \par 
+The goal of this project is to make large-scale three dimensional scanners more readily available to users in need of scanning objects larger than the average hand held scanner can accommodate as well as removing the human element required in scanning to ensure continuously accurate and autonomous scans. \par 
+The document will be in continuous revision during the developmental cycle of the project and will aid in keeping the system design in a constant and clear focus.
+
+\subsection{System Scope}
+The EyeCopter is the result of our autonomous large-scale three dimensional scanner. The scope of the project rests mostly on designing a functioning quad-copter capable of sustaining the weight of all instruments on board, as well as converting the gathered information into a three dimensional model and ensuring that the EyeCopter is autonomous enough to independently scan a large-sized object without necessary human intervention. Note however that some larger components of the project are outside of our scope and will therefore be adapted to function for our specific needs. \par 
+Items of functionality that remain in scope are: 
+\begin{enumerate}
+	\item Designing a quad-copter capable of flight;
+    \item Manipulating acquired flight controller to allow stable flight
+    \item Manipulating basic object avoidance system to eliminate possible collisions;
+    \item Designing a control system capable of automated flight and scans; 
+    \item Designing a launchpad for distance and position locating as well as homing;
+    \item Assembling basic 3D scanner capable of scanning objects within size limitations
+    \item Interfacing with 3D model conversion software;
+    \item Printing scans using a 3D printer;
+\end{enumerate}
+Items of functionality that remain outside of scope are:
+\begin{enumerate}
+	\item Designing a flight controller;
+    \item Designing a collision avoidance system;
+    \item Developing 3D model conversion software;
+    \item Building a 3D printer;
+\end{enumerate}
+The goal of the EyeCopter is to be generally applicable to a wide range of possible uses for both professionals and hobbyists, depending on the intended applications. These may include surveying small buildings, rendering sculptures/statues, applications for entertainment such as game design or film, researching and studying fragile historical artifacts, and so on. 
+
+
+\newpage
+
+
+\subsection{Definitions, Acronyms \& Abbreviations}
+Below are definitions, acronyms and abbreviations for specific or uncommon words used in the following document. 
+\begin{table}[ht]
+  \begin{center}
+  \makebox[\textwidth][c]{
+    \begin{tabular}{p{4cm} p{8.5cm}}
+
+        \textbf{3D} & In this context, the representation of a three dimensional real-world object in a two dimensional digital environment using geometric data. \\ \\
+        
+        \textbf{ESC} & The \textit{Electronic Speed Controller} controls the speeds at which each motor revolves in order to achieve movement during flight. \\ \\
+        
+        \textbf{fps} & Camera's picture rate measured in \textit{frames per second}. \\ \\
+        
+        \textbf{MP} & A \textit{megapixel} refers to the size of an image in reference to a photo from a digital camera. \\ \\
+        
+        \textbf{Modular Component} & A component of the EyeCopter which is designed to be easily removable, repairable or replaceable. Most of the EyeCopter's outer hull constitutes as a Modular Component. \\ \\
+        
+        \textbf{Non-Modular Component} & A component of the EyeCopter which cannot be removed, replaced, or repaired with ease. \\ \\
+        
+        \textbf{ppi} & Camera's image resolution measured in \textit{pixels per inch}. \\ \\
+
+        \textbf{Quad-copter} & A helicopter-like vehicle propelled by four rotors. In this context, it is relatively small and manageable by a single person. \\ \\
+        
+        \textbf{raspi} & Raspberry Pi, a credit card-sized single-board computer developed by the Raspberry Pi Foundation. \\ \\
+
+        \textcolor{red}{*} & A red asterisk denotes aspects that are liable to change during the development process.
+
+    \end{tabular}}
+  \end{center}
+\end{table}
+
+
+\newpage
+
+
+\subsection{References}
+\begin{enumerate}
+	\item "Flying an Unmanned Aircraft for Work or Research." Government of Canada; Transport Canada; Safety and Security Group, Civil Aviation. Web. 2 Nov. 2015.
+	\item "Advisory Circular (AC) No. 600-004." Government of Canada; Transport Canada; Safety and Security Group, Civil Aviation. 6 Jan. 2015. Web. 2 Nov. 2015.
+    \item "Insight3D - Quick Tutorial." Insight3D Tutorial. Web. 7 Dec. 2015. \texttt{<http://insight3d.sourceforge.net/insight3d\_tutorial.pdf>}.
+\end{enumerate}
+
+
+\newpage
+
+
+\section{Validation}
+The validation section details how the EyeCopter meets it's project goals through its requirements. The relation between the project goals and requirements are elaborated, as well as a brief description of how the project's goals can be validated by observing the validation process.
+
+\subsection{Project Goals}
+Below is a revised list of project goals for the EyeCopter system, a large scale 3D modeller. 
+\begin{enumerate}
+	\item The 3D modelling quad-copter will be able to scan an object of size 2-3 meters in height, 2-3 meters in length, and 2-3 meters in width. 
+	\item The 3D modelling quad-copter will be fully autonomous, and will be able to scan an object without any input from a human aside from initiating the launch process.  
+	\item The 3D modelling quad-copter will be able to produce a model file of the scanned object that is 3D printable.
+	\item The 3D modelling quad-copter system should be portable and easily deployed by a single person.
+    \item The quad-copter will be safe to operate.
+\end{enumerate}
+
+\newpage
+
+\subsection{Functional Validation}
+The following table outlines the project goals we have set and how the EyeCopter implementation meets each of these goals. The second table outlines the requirements set and how the implementation satisfies these requirements.
+
+\begin{table}[H]
+  \makebox[\textwidth][c]{
+      \begin{tabular}{p{5cm}p{8cm}} 
+          \multicolumn{1}{c}{\textbf{Goal}} & \multicolumn{1}{c}{\textbf{Characteristics and Functions}} 
+          \\ \hline 
+          The 3D Scanning Quad-copter will be able to scan an object that has a maximum height of 3 meters & The quad-copter will be positioned a set distance away such that the object is fully within the view of the Raspberry Pi Camera. This ensures that the pictures taken will have the entirety of the object.
+          \\ \hline
+          The 3D Scanning Quad-copter will be fully autonomous and will be able to scan an object without any input from a human aside from hitting "Start" & This is ensured by the flight controller which will begin the flight path of the quad-copter upon the user pressing "Start". Furthermore, the flight controller interfacing with the sensors will ensure that there are no collisions that occur and the radius of the orbit is constant throughout the flight. 
+          \\ \hline
+          The 3D Scanning Quad-copter will be able to produce a model file of the scanned object that is 3D printable. & The EyeCopter Command GUI will ensure that a 3D printable model file will be generated using the pictures taken by the Quad-copter. The user specifies the where the images are, the text file containing the image filenames, the location they want the final model and the final model filename. Upon starting the process the program will output a STL file containing the model.
+          \\ \hline
+          The 3D Scanning Quad-copter should be portable and deployable by a single person. & The quad-copter is lightweight which allows it to be very portable. Furthermore, the software component of the EyeCopter is portable as it can be loaded on any laptop. The image storage is also portable as it the image files are stored on a SD Card. A single person can deploy the system as all they would have to do is place the quad-copter a set distance away from the object, load up the software on a laptop, and press "Start".
+          \\ \hline
+          The quad-copter should be safe to operate. & This is ensured by the error handling of the system. The quad-copter has an emergency override that allows the user to take manual control over the quad-copter in the event an error occurs. There is also an emergency landing state that ensures the quad-copter cancels the orbit and begins landing.
+          \\ \hline
+      \end{tabular}}
+  \caption{Functional Validation of Project Goals}
+\end{table}
+
+\begin{table}[H]
+  \makebox[\textwidth][c]{
+      \begin{tabular}{p{6cm}p{8cm}} 
+          \multicolumn{1}{c}{\textbf{Requirements}} & \multicolumn{1}{c}{\textbf{Implementation}} 
+          \\ \hline
+          In order to execute the scanning procedure, the quad-copter will find the object in front of it during the initialization sequence and begin the scan operation. It will abort the operation based on the following condition is met: object detected by the front sensor & The sensors on board the quad-copter is responsible for determining if there is an object in the vicinity. The flight controller and sensor interface ensures that the operation is aborted in the event the object is no longer being detected by the sensor.
+          \\ \hline
+          To ensure the safety of bystanders, operators, and the device, as well as to allow the system to be able to meet many other quad-copter related constraints and requirements, the quad-copter must be able to achieve sustained flight while holding it's altitude during all system states. & The safety of the EyeCopter is established by the safety protocols implemented in the flight controller.
+          \\ \hline
+          The quad-copter must be able to keep within maximum tilt during flight, regardless of outside disturbances. & This requirement is met by the constraints placed on the flight controller in regards to pitch and yaw.
+          \\ \hline
+          The quad-copter must be able to move around an object at least one full revolution in a single direction such that the pictures being taken by the camera are usable to render a 3D model. & This requirement is met by the flight controller. The flight controller plans the orbit around an object and thus ensures that the camera takes enough pictures to render a 3D model.
+          \\ \hline
+          To ensure the quad-copter's continued longevity, the quad-copter must be able to safely land without damaging any of its parts, and thus must move towards the ground at a suitably low velocity. & This is also implemented in the flight controller. When a landing state is initiated the flight controller ensures that the quad-copter lowers itself at a low velocity.
+          \\ \hline
+          To ensure the safety of both the object and the quad-copter, the quad-copter must be able to avoid collisions with the object it is scanning, be keeping a certain distance away from all surfaces on the front, left, and right side. & The sensors on the quad-copter interface with the flight controller to plot a flight path that ensures no collisions occur.
+          \\ \hline
+          The quad-copter must be able to keep a set distance away from the object it is scanning, to keep images consistent. & The front sensor ensures that a constant distance is kept between the quad-copter and the target object.
+          \\ \hline
+          To prevent collisions, the speed at which the quad-copter is moving must be below such a speed that the sensor will be able to detect an impending collision and the flight controller will be able to avoid said collision. & This requirement is met by the speed limit the flight controller imposes on the quad-copter. The speed at which the quad-copter completes its orbit is slow enough to ensure that the sensors can alert the flight controller of any collisions that may occur.
+          \\ \hline
+          
+      \end{tabular}}
+  \caption{Functional Validation of Requirements}
+\end{table}
+\subsection{Behavioural Validation}
+All behavioural validation is to be performed by observing the system as it operates, to see if it meets the project goals. If the quad-copter completes its scan and lands safely, and a model is produced that from the images taken by the quad-copter, the behaviour will be valid according to the project goals. Once the entire system has been tested, and we do the integrated test of the whole system, whether or not the behaviour of the system is valid will be apparent.
+
+
+\newpage
+
+
+\section{Verification}
+Verification of the EyeCopter system is performed through integration testing. Each component is individually tested, and then tested integrated with other components bottom-up, until the system is being tested as a whole. As such, the verification is sectioned off. First Hardware verification is performed to make sure that on a physical level, all components are functioning correctly. Concurrently, while hardware verificatiion is done, flight planning verification is performed in the in-house quad-copter simulator. This is to avoid harm and possible loss by making sure that the flight planning is logical before attempting to integrate it with the quad-copter. Flight Control verification is performed upon the quad-copter using the verified algorithms from the Flight Planning verification. Modelling is first verified separately from the verification for flight-software, then integrated with the system as a whole.
+
+This verification process is iterative. Upon any changes made to software, it must once again pass all tests related to the software in a bottom-up fashion. Current test results are listed with PASS/FAIL, and uncompleted tests have Expected Output and Result columns are indicated with N/A (not applicable).
+
+% In-flight systems:
+% Verification process should be done in this order, each level of testing
+% must be fully completed before the next level.
+% Isolated hardware systems
+%		optical/ultrasonic calibration and testing
+%		PWM control signals (raspi -> FC), (RX -> raspi)
+% Integrated hardware systems
+%		PWM signal interpretation (RX -> raspi)
+%		manual control (RX -> raspi -> FC)
+%		Telemetry communication (raspi -> FC)
+% Isolated in-flight software systems
+%		flight planner control systems?
+%		anything in the simulator
+% Integrated in-flight software systems
+%		autonomous flight?
+
+
+\subsection{Hardware Verification}
+This section details the verification of individual hardware components such that they will all function correctly when operating within the greater system.
+
+\subsubsection{Calibration}
+
+\paragraph{Electronic Speed Controllers}
+The Electronic Speed Controllers (henceforth ESCs) are calibrated before flight. Each motor is slightly different in terms of how much power produces minimum stable motor spinning. Each ESC is calibrated with that value such that each each motor will produced equivalent thrust. Thus, this verifies that the motors are all functioning correctly and predictably.
+
+\paragraph{Ultrasonic Sensors}
+To measure the distance to the nearest object, the ultrasonic sensors measure the time of flight of a 40 Hz sound wave as it bounces off a surface. As such, they output a signal in the form of a pulse, the length of which corresponds to the time of flight of the sound wave. In order to translate this time value into a distance measurement, the sensors must be calibrated in a controlled environment. Our calibration procedure is as follows: the sensor is connected to an Arduino with an output controlling the trigger and an input measuring the length of the returning pulse from the sensor. The sensor is placed perpendicular to, and at a measured distance away from a flat, featureless wall. During a trial, 30 measurements are taken in quick succession and recorded in a text file. Trials are performed at 20 randomly selected distances between 50cm and 400cm, corresponding to the minimum and maximum rated distances of the sensor, respectively. After all trials are recorded, linear regression is performed on the data in order to find a linear relation between time of flight, and distance from the measurement surface.
+\par
+	The results are as follows: $D$ refers to the distance from the object in metres and $T$ refers to the time of flight of the sound wave in ms.\\
+    $$D = T \cdot 0.0573 (\sfrac{\textrm{m}}{\textrm{ms}}) - 0.1913 (\textrm{m})$$
+
+\subsubsection{Testing}
+Below area set of test cases used to verify that the hardware components are functioning.
+
+\begin{table}[H]
+  \makebox[\textwidth][c]{
+      \begin{tabular}{lp{6cm}p{3cm}p{3cm}c} 
+          \multicolumn{1}{c}{\textbf{Test ID}} & \multicolumn{1}{c}{\textbf{Inputs}} & \multicolumn{1}{c}{\textbf{Expected Values}} & \multicolumn{1}{c}{\textbf{Actual Values}} & \multicolumn{1}{c}{\textbf{Pass/Fail}} \\ \hline
+          % Power testing
+          %  ESC input voltage: 11.1V
+          %  DC-DC converter input voltage: 11.1V
+          %  DC-DC converter output voltage: 5V
+          % Ultrasonic sensor testing
+          %  1m = 5.54ms, 4m = 22.73ms
+          % telemetry communication
+          HW.1 & ESC input voltage & 11.1V & 11.3V & PASS \\
+          \hline
+          HW.2 & DC-DC converter input voltage & 11.1V & 11.3V & PASS \\
+          \hline
+          HW.3 & DC-DC converter output voltage & 5V & 4.9V & PASS \\
+          \hline
+          HW.4 & Echo signal from ultrasonic sensor, powered externally, at 1m from a wall & 5.54ms & 5.53ms & PASS \\
+          \hline
+          HW.5 & Echo signal from ultrasonic sensor, powered externally, at 4m from a wall & 22.73ms & 22.74ms & PASS \\
+          \hline
+          HW.6 & Echo signal from ultrasonic sensor, powered via the raspi, at 1m from a wall & 5.54ms & 5.54ms & PASS \\
+          \hline
+          HW.7 & Echo signal from ultrasonic sensor, powered via the raspi, at 4m from a wall & 22.73ms & 22.72ms & PASS \\
+          \hline
+          HW.8 & Serial signal from flight controller after sending an OBJ\_REQ\_ACK message & OBJ\_ACK message &  OBJ\_ACK message &  \\
+          \hline
+      \end{tabular}}
+  \caption{Testing Table Template}
+\end{table}
+
+\paragraph{Signal Generation [SG]} The following table outlines system performance tests which evaluate the performance and correctness to hardware subsystems that are directly involved in controlling and reading PWM signals. Every test in the following table is conducted by feeding PWM signals into the on-board Raspberry Pi and measuring computed outputs to confirm that Raspberry Pi performance meets requirements. The following test cases evaluate EyeCopter's ability to satisfy requirements MC1, MC6, MC7, SC2, and SC3 in the \textit{project goals and system requirements} document.
+
+
+% Control Signal generation
+% Control signal interpretation
+% manual control
+
+\begin{table}[H]
+  \makebox[\textwidth][c]{
+      \begin{tabular}{lp{4cm}p{4cm}p{4cm}c} 
+          \multicolumn{1}{c}{\textbf{Test ID}} & \multicolumn{1}{c}{\textbf{Inputs}} & \multicolumn{1}{c}{\textbf{Expected Values}} & \multicolumn{1}{c}{\textbf{Actual Values}} & \multicolumn{1}{c}{\textbf{Pass/Fail}} \\ \hline
+          SG.1 & 910$\mu$s PWM signal of period 2200$\mu$s  & 910$\mu$s PWM signal of period 2200$\mu$s & 915$\mu$s PWM signal of period 2200$\mu$s & PASS \\ \hline 
+          SG.2 & 2 simultaneous 910$\mu$s PWM signals & 910$\mu$s PWM signals & 915$\mu$s PWM signal & PASS \\ \hline
+          SG.3 & 2 simultaneous 910$\mu$s PWM signals & 2 910$\mu$s PWM signals & 2 approximately 915$\mu$s PWM signals & PASS \\ \hline
+          SG.4 & 4 simultaneous 910$\mu$s PWM signals & 4 910$\mu$s PWM signals & N/A & N/A\\ \hline
+          SG.5 & 1930$\mu$s PWM signal & 1930$\mu$s PWM signal & 1938$\mu$s PWM signal & PASS \\ \hline
+          SG.6 & 4 simultaneous 1930$\mu$s PWM signals & 4 1930$\mu$s PWM signals & N/A & N/A\\ \hline
+          SG.7 & 4 simultaneous 910$\mu$s PWM signals & consistent period on high and low regions on all 4 signals & N/A & N/A\\ \hline
+          SG.8 & 4 simultaneous 5v 910$\mu$s PWM signals & 4 3.3v 910$\mu$s PWM signals & N/A & N/A\\ \hline
+          SG.9 & 4 simultaneous 5v 1930$\mu$s PWM signals & 4 3.3v  1930$\mu$s PWM signals & N/A & N/A\\ \hline
+          SG.10 & 4 simultaneous 3ms PWM signals & 4 3ms PWM signals & N/A & N/A\\ \hline
+          SG.11 & 4 simultaneous 23ms PWM signals & 4 23ms PWM signals & N/A & N/A\\ \hline
+          SG.12 & 4 simultaneous 16ms PWM signals & 4 16ms PWM signals & N/A & N/A \\ \hline
+          SG.13 & 3ms PWM signal & float representing approximately 60cm & N/A & N/A\\ \hline
+          SG.14 & 23ms PWM signal & float representing approximately 4.1m & N/A & N/A \\ \hline
+          SG.15 & 16ms PWM signal & float representing approximately 2.9m & N/A & N/A\\ \hline
+          SG.16 & Power on the raspi & A PWM signal of length 2000$\mu$s and period approximately 0.1s & N/A & N/A \\ \hline
+          SG.17 & Power on the raspi & 2 PWM signals of length 2000$\mu$s and period approximately 0.1s & N/A & N/A \\ \hline
+      \end{tabular}}
+  \caption{In-Flight Software Tests}
+\end{table}
+
+
+\newpage
+
+
+
+
+\paragraph{Out of Flight Software [OF]} The following table outlines system performance tests which evaluate the performance and correctness to hardware subsystems that are integral to system correctness, but are not directly related to the operation of the quad-copter. The following test cases evaluate EyeCopter's ability to satisfy requirements SC1, IM1 and SO1 in  
+
+\begin{table}[H]
+  \makebox[\textwidth][c]{
+      \begin{tabular}{lp{4cm}p{4cm}p{4cm}c} 
+          \multicolumn{1}{c}{\textbf{Test ID}} & \multicolumn{1}{c}{\textbf{Inputs}} & \multicolumn{1}{c}{\textbf{Expected Values}} & \multicolumn{1}{c}{\textbf{Actual Values}} & \multicolumn{1}{c}{\textbf{Pass/Fail}} \\ \hline
+          OF.1 & Run the infinity.exe program on the raspi manually & In the /home/pi/camera/ directory new .jpg files are being generated until the infinity.exe program is terminated & In the /home/pi/camera/ directory new .jpg files are being generated until the infinity.exe program is terminated & PASS\\ \hline
+          OF.2 & Power on the raspi & In the /home/pi/camera/ directory new .jpg files are being generated until the infinity.exe program is terminated & In the /home/pi/camera/ directory new .jpg files are being generated until the infinity.exe program is terminated & PASS\\ \hline
+          OF.3 & Run the infinity.exe program on the raspi manually & In the /home/pi/camera/ directory a PNames.txt file is being updated with the names of generated .jpg files & In the /home/pi/camera/ directory a PNames.txt file is being updated with the names of generated .jpg files & PASS\\ \hline
+          OF.4 & Power on the raspi & A process called "allFeeds" is loaded into the raspberry-Pi scheduler & N/A & N/A \\ \hline
+          OF.5 & Power on the raspi & A process called "sensors" is loaded into the raspberry-Pi scheduler & N/A & N/A \\ \hline
+          
+          
+          
+          
+
+          
+          
+      \end{tabular}}
+  \caption{Out of Flight Software Tests}
+\end{table}
+
+
+\newpage
+
+\subsection{In-Flight Software Verification}
+% Software involved in the automated control of the quad-copter
+
+\subsubsection{Testing}
+Below is a series of tests conducted in order to determine whether or not the implementation of the software in the system is adequate in terms of the requirements set forth earlier on in the design process.
+
+\paragraph{Flight Planning [FP]}
+All tests for the quad-copter flight planning are performed in the full 3D quad-copter simulator developed in house. Tests are performed with simulated noise on the sensor values. These tests verify that the in-flight flight planning software is correct, by making sure the software performs properly in each phase of operation. First takeoff and hold position are tested, then if it can move at a constant speed and then orbit around an object. The latter two tests are performed first on a simple prism-like object. Then, they are performed on a more irregular object to see how the quad-copter deals with irregularity.
+\begin{table}[H]
+  \makebox[\textwidth][c]{
+      \begin{tabular}{lp{4cm}p{4cm}p{4cm}c} 
+          \multicolumn{1}{c}{\textbf{Test ID}} & \multicolumn{1}{c}{\textbf{Inputs}} & \multicolumn{1}{c}{\textbf{Expected Values}} & \multicolumn{1}{c}{\textbf{Actual Values}} & \multicolumn{1}{c}{\textbf{Pass/Fail}} \\ \hline 
+          FP.1 & Desired Height of quad-copter. & 
+          Quad-copter should rise to within 5\% of desired height from the ground. &
+          Quad-copter rose to within 5\% of height & PASS \\ \hline
+          FP.2 & Desired height of quad-copter, zero velocity in x and y axes.  &
+          Quad-copter should rise while staying stationary in the x and y axes within some margin for error. &
+          Quad-copter rose while shifting slightly. & PASS\\ \hline
+          FP.3 & Desired height of quad-copter, desired quad-copter velocity, simple model file. &
+          Quad-copter should move horizontally while staying at constant height and distance from the object it is facing. & N/A
+          & N/A \\ \hline
+          FP.4 & Desired height of quad-copter, desired velocity of quad-copter, simple model file. &
+          Quad-copter should complete orbits around object. & N/A
+          & N/A \\ \hline
+          FP.5 & Desired height of quad-copter, desired quad-copter velocity, irregular model file. &
+          Quad-copter should move horizontally while staying at constant height and distance from the object it is facing. & N/A
+          & N/A \\ \hline
+          FP.6 & Desired height of quad-copter, desired velocity of quad-copter, irregular model file. &
+          Quad-copter should complete orbits around object. & N/A
+          & N/A \\ \hline
+          FP.6 & Initial height of quad-copter, desired height of 0m for quad-copter, desired velocity of 0m/s in x and y axes. &
+          Quad-copter should land smoothly. & Quad-copter came to a smooth landing.
+          & PASS \\ \hline
+      \end{tabular}}
+  \caption{Flight Planning Test Cases}
+\end{table}
+
+\newpage 
+
+\paragraph{Flight Control [FC]}
+All tests for flight control are performed on the quad-copter in action. These tests ensure proper operation and execution of the flight planning on the quad-copter itself.
+
+\begin{table}[H]
+  \makebox[\textwidth][c]{
+      \begin{tabular}{lp{4cm}p{4cm}p{4cm}c} 
+          \multicolumn{1}{c}{\textbf{Test ID}} & \multicolumn{1}{c}{\textbf{Inputs}} & \multicolumn{1}{c}{\textbf{Expected Values}} & \multicolumn{1}{c}{\textbf{Actual Values}} & \multicolumn{1}{c}{\textbf{Pass/Fail}} \\ \hline 
+          FC.1 & Manual inputs from transmitter. & 
+          Quad-copter should move predictably according to manual inputs. &
+          Quad-copter was controlled smoothly by manual inputs. & PASS \\ \hline
+          FC.2 & Desired height of quad-copter, desired velocity of 0m/s in x and y axes. &
+          Quad-copter rises to the desired height and velocity is $0 \pm 0.01$ m/s in the x and y axes. & N/A & N/A \\ \hline
+          FC.3 & Desired height of quad-copter, desired velocity of 0m/s in x and y axes, manual inputs from transmitter. &
+          Quad-copter rises to the desired height, velocity is $0 \pm 0.01$ m/s in the x and y axes, and then manual control overrides the control system. & N/A & N/A \\ \hline
+          FC.4 & Desired height of quad-copter, desired quad-copter velocity. &
+          Quad-copter should move horizontally while staying at constant height and distance from the object it is facing. & N/A
+          & N/A \\ \hline
+          FC.5 & Desired height of quad-copter, desired velocity of quad-copter &
+          Quad-copter should complete orbits around object. & N/A
+          & N/A \\ \hline
+          FC.6 & Initial height of quad-copter, desired height of 0m for quad-copter, desired velocity of 0m/s in x and y axes. &
+          Quad-copter should land smoothly. & N/A
+          & N/A \\ \hline          
+      \end{tabular}}
+  \caption{Flight Planning Test Cases}
+\end{table}
+
+\newpage
+
+\subsection{Modelling Software Verification}
+% Software used to generate the three dimensional model from the pictures taken during flight.
+
+\subsubsection{Testing}
+Below is a series of tests conducted in order to determine whether or not the implementation of the software in the system is adequate in terms of the requirements set forth earlier on in the design process.
+
+\paragraph{Model Generation [MG]} These tests amount to generating 3D models of sufficient quality and completeness assuming the test pictures used for processing are ideal. 
+\begin{table}[H]
+  \makebox[\textwidth][c]{
+      \begin{tabular}{lp{4cm}p{4cm}p{4cm}c} 
+          \multicolumn{1}{c}{\textbf{Test ID}} & \multicolumn{1}{c}{\textbf{Inputs}} & \multicolumn{1}{c}{\textbf{Expected Values}} & \multicolumn{1}{c}{\textbf{Actual Values}} & \multicolumn{1}{c}{\textbf{Pass/Fail}} \\ \hline 
+          MG.1 & Picture Location; Picture List File Name; Model Output Location; Model Output File Name & \texttt{.sift} and \texttt{.mat} image mapping files; \texttt{.nmv} point cloud file & \texttt{.sift} and \texttt{.mat} image mapping files; \texttt{.nmv} point cloud file & PASS \\ \hline 
+          MG.2 & \texttt{.nmv} point cloud file & \texttt{.stl} 3D model & \texttt{.stl} 3D model & PASS \\ \hline
+          MG.3 & 30 \texttt{.jpg} image files & \texttt{.nmv} dense point cloud & \texttt{.nmv} dense point cloud & PASS \\ \hline
+          MG.4 & 60 \texttt{.jpg} image files & \texttt{.nmv} dense point cloud & \texttt{.nmv} dense point cloud & PASS \\ \hline
+          MG.5 & 90 \texttt{.jpg} image files & \texttt{.nmv} dense point cloud & \texttt{.nmv} dense point cloud & PASS \\ \hline
+          MG.6 & 120 \texttt{.jpg} image files & \texttt{.nmv} dense point cloud & \texttt{.nmv} dense point cloud & PASS \\ \hline
+          MG.7 & 150 \texttt{.jpg} image files & \texttt{.nmv} dense point cloud & \texttt{.nmv} dense point cloud & PASS \\ \hline
+          MG.8 & 180 \texttt{.jpg} image files & \texttt{.nmv} dense point cloud & System Failure & FAIL \\ \hline
+      \end{tabular}}
+  \caption{Model Generation Test Cases}
+  
+\end{table}
+The testing conducted allowed us to verify the number of pictures required to produce a satisfiable 3D model. Images used that were ranged from 30 to 150 images ended up producing a viable set of point clouds. The less images used gave us a lower quality point cloud. Using 180 images caused the program to crash. This was possibly due to hardware limitations. These are external programs that we are using, and as such we are unable to conduct white box testing on them. 
+
+
+
+
+
+
+
+\end{document}

@@ -1,0 +1,79 @@
+# Settings is a plain text file, settings are stored as a key value pair with
+# each key and value stored as a string. Spaces and tabs are used as separating
+# characters.
+
+# Options that have been commented out have not been implemented yet
+
+# Simulation options
+simulator_visual		on		# on | off
+simulator_interactive	off		# on | off, visual only, allows manual control of quadcopter
+simulator_end_time		1		# seconds, 0 = unlimited
+simulator_timestep		10		# milliseconds, non-visual only
+
+
+# Quad-copter is represented as a flat square. Implementing height is not needed
+copter_size				1.0
+copter_mass				1.1
+#copter_h_speed			1.0
+#copter_v_speed			1.0
+copter_throttle_hover	0.5			# percentage of max. throttle to hold altitude
+copter_pitch_limit		70.0		# max/min pitch in degrees
+copter_roll_limit		70.0		# max/min roll in degrees
+
+# Initial position and direction of quad-copter
+copter_init_pos_x		0.0
+copter_init_pos_y		0.0
+copter_init_pos_z		6.0
+copter_init_dir_x		0.0
+copter_init_dir_y		0.0
+copter_init_dir_z		-1.0
+
+# camera_capture_period	1.0			# Time in seconds between picture capturing.
+camera_capture_num		20			# number of pictures to output, wont be in final version
+camera_path_y			1.0			# height of camera path, wont be in final version
+camera_path_r			1.0			# radius of camera path, wont be in final version
+camera_fov				90.0
+
+# add in pitch/roll min/max ?
+
+# Quad-copter has one front facing sensor and two sensors on the left and right at the specified
+# angle. Ex: angle = 45 means front facing sensor at North, left and right sensors at North-West
+# and North-East respectively.
+copter_sensor_angle		45.0
+sensor_range_min		0.25
+sensor_range_max		5
+
+# NOTE: If image path doesn't exist, image writing will fail. This is because C++ doesn't have a
+# standard way of dealing with directories and it seems useless to include a library to deal with
+# this when instead the user can just create the directory manually before running the program.
+# NOTE: When specifying the path, do not use 
+image_path			./img
+image_prefix		IMG_
+image_h_res			640
+image_v_res			480
+
+# BMP is recommended for smaller images since it writes quicker due to lack of compression.
+# PNG is recommended for larger images since it's compression can take advantage of large patches
+# of identical pixels. Don't use TGA, windows doesn't open it natively.
+image_filetype		BMP			# bmp | tga | png
+#floor_type			solid		# none | solid | checker
+
+
+# Options for loading the model for the quadcopter to fly around. Must be an STL file
+# if the units are wrong in the .stl file, an option for scaling is provided.
+model_file			models/Wall.stl
+model_scale			1
+
+
+# Quad-copter's orientation can be perturbed by an amount modeled as a normal distribution. This
+# distribution is centered at 0 degrees and has a specified standard deviation (also in degrees) 
+noise_pitch				0.0
+noise_yaw				0.0
+noise_roll				0.0
+
+# Image noise. Not implemented. Maybe implement as a texture? WHO KNOWS!
+#noise_pixel			0.0
+
+# Sensor noise, in meters. Standard deviation of error in readings.
+# this is implemented but untested.
+noise_sensor	0.02

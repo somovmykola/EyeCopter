@@ -1,0 +1,22 @@
+Transmitter:    Spektrum DX5e
+Receiver:       Spektrum AR61
+
+Signal:
+     _____           ____
+    |     |         |     |
+    |     |         |     |
+----+     +---------+     +--
+
+Period of 22ms.
+High value is held for varying time depending on channel and value. The minimum,
+maximum, and neutral values are described below:
+
+
+        | throttle | pitch |  yaw  |  roll
+--------+----------+-------+-------+-------
+min     |      910 |  1010 |  1000 |  1120
+neutral |      n/a |  1410 |  1370 |  1520
+max     |     1880 |  1810 |  1750 |  1930
+off     |     1100 |     - |     - |     -
+
+All values in microseconds.

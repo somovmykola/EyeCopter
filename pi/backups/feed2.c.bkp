@@ -1,0 +1,67 @@
+//backup of depricated feed program. use allFeeds in main instead
+
+#include <wiringPi.h>
+#include <time.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <unistd.h>
+
+//#define PERIOD 300
+//#define ON_TIME 100
+
+//bool cycle = true;
+
+PI_THREAD(thing){
+  int val;
+  bool cycle;
+  val = digitalRead(0);
+  if (val==0) cycle=false; 
+  else cycle = true;
+  //clock_t t= clock()+200;
+  for(;;){
+     if (waitForInterrupt (0, -1) > 0)  // Got it 
+         {
+            cycle=!cycle;
+            //printf("lol");
+            if(cycle) digitalWrite(1, HIGH);
+            else digitalWrite(1, LOW);
+            continue;
+         }
+  }
+}
+
+void setup(void){
+
+    wiringPiSetup () ;
+  //piHiPri(99);  
+  pinMode (0, INPUT) ;
+  pinMode(1, OUTPUT);
+  pullUpDnControl (0, PUD_UP);
+  pullUpDnControl (1, PUD_UP);
+
+
+  piThreadCreate (thing); 
+}
+
+int main (void)
+{
+
+  setup();
+
+  //clock_t high, low, t;
+
+  //high = clock();
+  //low = high + ON_TIME; 
+  for (;;)
+  {
+   //t = clock();
+      delay(1000);
+
+   }
+
+
+   //if (t >=high){ digitalWrite (0, HIGH) ; high = t+400; low = t+200;}
+   //if (t >= low){ digitalWrite (0,  LOW) ; low = t+400; high = t+200;}
+  
+  return 0 ;
+}

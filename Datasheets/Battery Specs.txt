@@ -1,0 +1,18 @@
+Battery Type: Lithium Polymer (LiPo Battery)
+C Rate: 20C
+Volts: 11.1
+Capacity: 2100mAh
+Cell Count: 3S
+Cell Configuration: 3S1P
+Continuous Discharge: 20C (42A)
+Max Burst Rate: 30C (63A)
+Max Volts per Cell: 4.2V
+Max Volts per Pack: 12.6V
+Min Volts per Pack: 9V
+Charge Rate: 1C (2.1A)
+Max Approved Charge Rate: 3C (6.3A)
+Wire Gauge: 14 AWG Soft and Flexible Low Resistance Silicone Wire
+Plug Type: Venom UNI Plug. Compatible with Traxxas Plug, Tamiya Plug, Deans Plug & EC3 Plug.
+Dimensions: 106 x 36 x 25 mm / 4.17 x 1.41 x 0.98 in
+Watt Hours: 23.31
+Weight: 6.2 oz (175.8 g)

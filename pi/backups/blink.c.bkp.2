@@ -1,0 +1,39 @@
+//backup blink program.
+//used for testing.
+//makes a pin cycle on and off
+
+#include <wiringPi.h>
+#include <time.h>
+
+#define PERIOD 300
+#define ON_TIME 100
+
+int main (void)
+{
+  clock_t high, low, t;
+  wiringPiSetup () ;
+  //piHiPri(99);  
+  pinMode (0, OUTPUT) ;
+  high = clock();
+  low = high + ON_TIME; 
+  for (;;)
+  {
+   t = clock();
+   if (t >= high) {
+       if(t >= low) {
+           digitalWrite(0, LOW);
+           high += PERIOD;
+           low += PERIOD;
+       } else {
+           digitalWrite(0, HIGH);
+       }
+
+
+   }
+
+
+   //if (t >=high){ digitalWrite (0, HIGH) ; high = t+400; low = t+200;}
+   //if (t >= low){ digitalWrite (0,  LOW) ; low = t+400; high = t+200;}
+  }
+  return 0 ;
+}

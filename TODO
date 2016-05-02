@@ -1,0 +1,60 @@
+TODO
+====
+
+Figure out yaw control
+Update system design with spreadsheet
+
+Autonomous Flight: (in order)
+Auto takeoff, manual land (no horizontal movement)
+Auto takeoff and land (no horizontal movement)
+Auto takeoff, forward until wall, land (no movement parallel to wall)
+Auto takeoff, forward until wall, pan along wall, land
+Auto takeoff, hold distance to wall, pan along wall, land
+Auto takeoff, hold distance to wall, turn along object, land
+
+Raspi:
+Find maximum gpio output speed (run a continous blink with no delay)
+Test ultrasonic sensors (measure pulse length)
+Serial communication with CC3D (using UAVTalk)
+Communication with optical sensor
+Log values from sensors and manual controls during manual flight
+
+
+-------------------Raspi: finishing touches --------------------
+
+
+putting everything together:
+
+
+design the PID and the control sides as concurrent threads that 
+read and write to shared memory. Both sides would have to lock 
+the memory when it's in use to avoid corruption
+
+elements to be shared:
+
+control signals (PYRT) to FC
+sensor data
+serial data
+
+manual control is assumed on rising edge, on a bool. 
+if the bool is T, lead run allfeeds instead of the normal loop.
+
+
+----- Concurrency Test -----
+
+Read ultrasonic sensor and optical sensor values periodically.
+Output values every X (milli)seconds. Not necessarily at the same rate
+as the values are read. Report the time between readings in milliseconds
+in order to determine average latency and jitter on sensor readings.
+Control signals of a fixed length should also be outputted so that any
+output latency or jitter can be measured.
+
+
+################PRECAUTIONS:###################
+
+-Do NOT leave the pi in idle when it is being powered off the battery
+-Only use the battery to power the pi when using external peripherals
+-Otherwise power the pi off the USB
+-At the end of every session use the smart charger to keep the battery
+at a safe voltage.
+-At the start of every session charge the battery fully

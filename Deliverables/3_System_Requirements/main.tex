@@ -1,0 +1,622 @@
+\documentclass[10pt,letterpaper]{article}
+\setlength{\paperheight}{11in}
+\setlength{\paperwidth}{8.5in}
+\usepackage[ascii]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{gensymb}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{soul}
+\usepackage{array}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\usepackage{latexsym}
+\usepackage{chngpage}
+\usepackage{hyperref} % Inserts hyper-references in the table of contents
+\hypersetup{
+	colorlinks,
+	citecolor=black,
+	filecolor=black,
+	linkcolor=black,
+	urlcolor=black
+}
+\usepackage{tikz} 			% Diagrams
+\usetikzlibrary{arrows}		% Diagrams
+\usepackage{verbatim}		% Diagrams
+\tikzstyle{int}=[draw, fill=blue!20, minimum size=2em]
+\tikzstyle{init} = [pin edge={to-,thin,black}]
+
+
+\begin{document}
+	
+	% TITLE PAGE
+	
+	\begin{titlepage}
+		\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+		\center
+		
+		\textsc{\LARGE McMaster University}\\[1.5cm] % Name of your university/college
+		\textsc{\Large Project Goals \& System Requirements}\\[0.5cm] % Major heading such as course name
+		\textsc{\large 4G06 Capstone Design Project}\\[0.5cm] % Minor heading such as course title
+		
+		\HRule \\[0.4cm] 
+		{ \huge \bfseries EyeCopter \\[2mm] \textit{A Large Scale 3D Modeller}}\\[0.4cm] % Title of your document
+		\HRule \\[1.5cm]
+		
+		\begin{tabular}{ccc}
+			\bf{Paul Correia}		& \bf{Nicolas Lelievre} 	& \bf{Bennett Mackenzie}		\\
+			Mechatronics Eng 		& Software Eng 				& Software Eng 					\\
+			\textit{1132370} 		& \textit{1203446}			& \textit{1211985} 				\\ \\
+			\bf{Tigran Martikian} 	& \bf{Balraj Shah} 			& \bf{Mykola Somov} 			\\
+			Software Eng			& Software Eng				& Software Eng 					\\
+			\textit{1213170} 		& \textit{1207997}			& \textit{1141160}
+		\end{tabular}\\[4cm]
+		
+		{\large February 29, 2016}\\[3cm] 
+		
+		%\includegraphics{Logo}\\[1cm] % Include a department/university logo - this will require the graphicx package
+		
+		\vfill % Fill the rest of the page with whitespace
+		
+	\end{titlepage}
+	
+    
+\thispagestyle{empty}
+
+\tableofcontents
+
+
+\newpage
+
+
+\thispagestyle{empty}
+
+\listoffigures
+
+\listoftables
+
+
+\newpage
+
+
+\thispagestyle{empty}
+
+\section*{Revisions}
+\begin{center}
+\makebox[\textwidth][c]{  
+  \begin{tabular}{cccc}
+      \hline 
+      \sc{Revision} & \sc{Date} & \sc{Authors} & \sc{Description of Revision} \\ \hline
+      0 & Nov 2, 2015 & $\begin{matrix} \text{Paul Correia} \\ \text{Nicolas Lelievre} \\ \text{Bennett Mackenzie} \\ \text{Tigran Martikian} \\ \text{Balraj Shah} \\ \text{Mykola Somov} \end{matrix}$ & Initial revision of the SRS. \\ \hline 
+      1 & Dec 1, 2015 & $\begin{matrix} \text{Paul Correia} \\ \text{Nicolas Lelievre} \\ \text{Bennett Mackenzie} \\ \text{Tigran Martikian} \\ \text{Balraj Shah} \\ \text{Mykola Somov} \end{matrix}$ & Revision of the initial SRS. \\ \hline 
+      2 & Dec 2, 2015 & $\begin{matrix} \text{Paul Correia} \\ \text{Nicolas Lelievre} \\ \text{Bennett Mackenzie} \\ \text{Tigran Martikian} \\ \text{Balraj Shah} \\ \text{Mykola Somov} \end{matrix}$ & $\begin{matrix} \text{Updated  monitored and controlled variables.} \\ \text{Abstracted technical details in document.} \\ \text{Added ``Items Likely To Change''.} \\ \text{Fixed algorithm diagram such that it completes.}\\ \text{Added context diagram.}\\ \text{Added rationale as part of functional requirements.} \\ \text{Added tolerances for controlled and monitored vars.} 
+      \end{matrix}$ \\ \hline 
+      3 & Feb 28, 2016 & $\begin{matrix} \text{Paul Correia} \\ \text{Nicolas Lelievre} \\ \text{Bennett Mackenzie} \\ \text{Tigran Martikian} \\ \text{Balraj Shah} \\ \text{Mykola Somov} \end{matrix}$ & $\begin{matrix} \text{Incorporated and updated project goals.} \\ \text{Removed Battery Management System.} \\ \text{Added downward facing sensor.} \\ \text{Updated maximum object height.} \\ \text{Added maximum tilt constant.} \\ \text{Added minimum distance from object.} \\ \text{Added rationale for non-trivial constants.} \\ \text{Updated system capabilities and conditions.} \\ \text{Updated system constraints.} \\ \text{Updated assumptions and dependencies.}
+      \end{matrix}$ \\ \hline 
+  \end{tabular}}
+\end{center}
+
+\newpage
+
+
+\section{Introduction}
+\subsection{System Purpose}
+The advent of three dimensional modelling has revealed many new possibilities in computer graphics used in a multitude of fields ranging from game design to medical applications. As of late, three dimensional scanners have become significantly more accessible to the average consumer and therefore have gained immense popularity among professionals and hobbyists alike. \par 
+The main focus of scanning three dimensional objects has however remained transfixed on a relatively small scale, often within a human's reach. Although some hand held three dimensional scanners offer high resolution scans and very detailed renderings, they are limited to house-hold object sizes meaning that larger objects are not easily scanned using such methods. \par 
+The goal of this project is to make large-scale three dimensional scanners more readily available to users in need of scanning objects larger than the average hand held scanner can accommodate as well as removing the human element required in scanning to ensure continuously accurate and autonomous scans. \par 
+The purpose of this document is to specify the requirements necessary for this project in terms of a general system description as well as the system's capabilities, conditions and constraints. The document will be in continuous revision during the developmental cycle of the project and will aid in keeping requirements in a constant and clear focus.
+
+\subsection{System Scope}
+The EyeCopter is the result of our autonomous large-scale three dimensional scanner. The scope of the project rests mostly on designing a functioning quad-copter capable of sustaining the weight of all instruments on board, as well as converting the gathered information into a three dimensional model and ensuring that the EyeCopter is autonomous enough to independently scan a large-sized object without necessary human intervention. Note however that some larger components of the project are outside of our scope and will therefore be adapted to function for our specific needs. \par 
+Items of functionality that remain in scope are: 
+\begin{enumerate}
+	\item Designing a quad-copter capable of flight;
+    \item Manipulating acquired flight controller to allow stable flight
+    \item Manipulating basic object avoidance system to eliminate possible collisions;
+    \item Designing a control system capable of automated flight and scans; 
+    \item Assembling basic 3D scanner capable of scanning objects within size limitations
+    \item Interfacing with 3D model conversion software;
+\end{enumerate}
+Items of functionality that remain outside of scope are:
+\begin{enumerate}
+	\item Designing a flight controller;
+    \item Designing a collision avoidance system;
+    \item Developing 3D model conversion software;
+    \item Building a 3D printer;
+    \item Scanning of irregularly shaped, mundane, or transparent objects;
+\end{enumerate}
+The goal of the EyeCopter is to be generally applicable to a wide range of possible uses for both professionals and hobbyists, depending on the intended applications. These may include surveying small buildings, rendering sculptures/statues, applications for entertainment such as game design or film, researching and studying fragile historical artifacts, and so on. 
+
+
+\newpage
+
+
+\subsection{Definitions, Acronyms \& Abbreviations}
+Below are definitions, acronyms and abbreviations for specific or uncommon words used in the following document. 
+\begin{table}[ht]
+  \begin{center}
+    \begin{tabular}{p{4cm} p{8.5cm}}
+
+        \textbf{3D} & In this context, the representation of a three dimensional real-world object in a two dimensional digital environment using geometric data. \\ \\
+        
+        \textbf{fps} & Camera's picture rate measured in \textit{frames per second}. \\ \\
+        
+        \textbf{MP} & A \textit{megapixel} refers to the size of an image in reference to a photo from a digital camera. \\ \\
+        
+        \textbf{Modular Component} & A component of the EyeCopter which is designed to be easily removable, repairable or replaceable. Most of the EyeCopter's outer hull constitutes as a Modular Component. \\ \\
+        
+        \textbf{Non-Modular Component} & A component of the EyeCopter which cannot be removed, replaced, or repaired with ease. \\ \\
+        
+        \textbf{ppi} & Camera's image resolution measured in \textit{pixels per inch}. \\ \\
+
+        \textbf{Quad-copter} & A helicopter-like vehicle propelled by four rotors. In this context, it is relatively small and manageable by a single person. \\ \\
+        
+        \textbf{raspi} & Raspberry Pi, a credit card-sized single-board computer developed by the Raspberry Pi Foundation. \\ \\
+
+        \textcolor{red}{*} & A red asterisk denotes requirements that are liable to change during the development process.
+
+    \end{tabular}
+  \end{center}
+\end{table}
+
+
+\newpage
+
+
+\subsection{References}
+\begin{enumerate}
+	\item "Flying an Unmanned Aircraft for Work or Research." Government of Canada; Transport Canada; Safety and Security Group, Civil Aviation. Web. 2 Nov. 2015.
+	\item "Advisory Circular (AC) No. 600-004." Government of Canada; Transport Canada; Safety and Security Group, Civil Aviation. 6 Jan. 2015. Web. 2 Nov. 2015.
+\end{enumerate}
+
+
+\newpage
+
+
+% UPDATE PROJECT GOALS SECTION - DONE
+\section{Project Goals}
+Below is a revised list of project goals for the EyeCopter system, a large scale 3D modeller. 
+\begin{enumerate}
+	\item The 3D modelling quad-copter will be able to scan an object of size 2-3 meters in height, 2-3 meters in length, and 2-3 meters in width. 
+	\item The 3D modelling quad-copter will be fully autonomous, and will be able to scan an object without any input from a human aside from initiating the launch process.  
+	\item The 3D modelling quad-copter will be able to produce a model file of the scanned object that is 3D printable.
+	\item The 3D modelling quad-copter system should be portable and easily deployed by a single person.
+    \item The quad-copter will be safe to operate.
+\end{enumerate}
+\subsection{Reasoning}
+3D scanning technology is something that already exists, as many already know. However, we've identified that 3D scanning technology that is both flexible and autonomous is not currently available on the market. Autonomous scanners in existence are very rigid in terms of what objects can be scanned. The objects must fit on a fixed platform for the machine to scan them, which means that the larger the object, the larger the scanning apparatus. Thus, after a certain size threshold, having a 3D scanner that could scan an object would be inconvenient at best and unfeasible at worst in such a scenario. \par 
+More flexible 3D scanning technology does exists, however it is limited by the human factor. Select scanners let humans scan an object manually from different angles, allowing a 3D model to be produced based on those scans. This solves the flexibility problem: having a hand-held scanner allows a human to scan 3D objects of various sizes without having a bulky apparatus. However, this introduces possible human error in the scanning, and limits the size of the object being scanned to that which a human can reach. \par 
+A 3D Scanning quad-copter solves all of the above problems. It is autonomous and therefore removes human error in the scanning of objects, it can scan objects of both larger and smaller sizes while still remaining portable, as well as scan things that a human is not realistically able to (perhaps due to the object being too tall or irregular in shape).
+
+
+\newpage
+
+
+\section{System Overview}
+
+% TODO: Context diagram needs updating
+% Add downwards facing sensor
+% Split modelling into point cloud and other shit
+\subsection{Context Diagram}
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{Context_Diagram.png}
+\caption{Context diagram for EyeCopter system}
+\label{fig:context_diagram}
+\end{figure}
+
+
+\subsection{Monitored \& Controlled Variables}
+The monitor and control variables, as deemed necessary for the system to function properly according to system requirements, are listed in the below tables. \\
+
+% TODO: No more battery voltage and current monitoring - DONE
+% Add in a downward facing sensor - DONE
+% Remove m_PX, Y, Z - DONE
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{c p{6.5cm} cc}
+        	\hline
+            \sc{Variable} 	& \sc{Description} 	& \sc{Range} & \sc{Units} \\ \hline
+            \texttt{m\_manP} & Manually controlled pitch (override) & 0 - 90 $\pm$ 5 & deg \\
+            \texttt{m\_manR} & Manually controlled roll (override) & 0 - 90 $ \pm $ 5 & deg \\
+            \texttt{m\_manY} & Manually controlled yaw (override) & 0 - 360 $ \pm $ 10 & deg \\
+            \texttt{m\_manT} & Manually controlled thrust (override) & 0 - 0.5 $ \pm $ 0.05 & N \\
+            \texttt{m\_DistR} & Distance from object on right & 0 - 3 $ \pm $ 0.1 & m \\
+            \texttt{m\_DistL} & Distance from object on left & 0 - 3 $ \pm $ 0.1 & m \\
+            \texttt{m\_DistF} & Distance from object in front & 0 - 3 $ \pm $ 0.1 & m \\
+            \texttt{m\_DistG} & Distance from ground surface & 0 - 3 $ \pm $ 0.1 & m \\
+            \texttt{m\_Image} & Light reflection captured by camera & N/A & N/A 
+		\end{tabular}
+	\end{center}
+\caption[Monitored System Variables]{Monitored System Variables}
+\end{table}
+
+\vspace{5mm}
+
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{c p{6.5cm} cc}
+        	\hline
+            \sc{Variable} 	& \sc{Description} 	& \sc{Range} & \sc{Units} \\ \hline
+            \texttt{c\_Pitch} & Tilting about the x-axis & 0 - 90 $ \pm $ 5 & deg \\
+            \texttt{c\_Roll} & Tilting about the y-axis & 0 - 90 $ \pm $ 5 & deg \\
+            \texttt{c\_Yaw} & Twist or oscillate about the z-axis & 0 - 360 $ \pm $ 10 & deg \\
+            \texttt{c\_Thrust} & Upward thrust exerted by the motors & 0 - 0.5 $ \pm $ 0.05 & N \\
+            \texttt{c\_CamIO} & Camera operation on or off & 0 or 1 & Binary \\
+            \texttt{c\_State} & Current state of the system & N/A & Enum \\
+            \texttt{c\_Timer} & Current timer count & 0 - $(2^{32}-1)$ & s \\
+         \end{tabular}
+	\end{center}
+\caption[Controlled System Variables]{Controlled System Variables}
+\end{table}
+ 
+
+\subsection{Constants}
+Constants relating to the system in order for it to function properly according to the requirements are listed in the below table.
+
+% TODO:
+% Find exact dimensions of quad-copter - DONE
+% Add in maximum tilt - DONE
+% Add in rational for non-trivial values - DONE
+% Cross reference rational with constraints (ie MC11 with max speed)
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{c p{6.5cm} cc}
+        	\hline
+            \sc{Constant} 	& \sc{Description} 	& \sc{Value} & \sc{Units} \\ \hline
+            \texttt{k\_FrameRate} & Frame rate of the camera & 1 & fps \\
+            \texttt{k\_CamRes} & Camera resolution & 5 & MP \\
+            \texttt{k\_TotalMass} & Mass of the EyeCopter  & 1.1\textcolor{red}{*} & kg \\
+            \texttt{k\_TotalHeight} & Height of the EyeCopter & 120\textcolor{red}{*} & mm \\
+            \texttt{k\_TotalWidth} & Width of the EyeCopter & 325 & mm \\
+            \texttt{k\_TotalDepth} & Depth of the EyeCopter & 285 & mm \\
+            \texttt{k\_Storage} & Maximum solid state storage capacity & 8\textcolor{red}{*} & GB \\
+            \texttt{k\_MaxSpeed} & Maximum horizontal velocity of quad-copter & 1 & m/s \\
+            \texttt{k\_MaxTilt} & Maximum tilt angle of quad-copter & 15 & deg \\
+            \texttt{k\_MinDist} & Minimum allowable distance from object & 1 $\pm$ 0.2 & m \\
+            \texttt{k\_DistTol} & Maximum flight duration & 15 & min \\
+		\end{tabular}
+	\end{center}
+\caption[Constants of the System]{Constants of the System}
+\end{table}
+
+\paragraph{\texttt{k\_FrameRate}} This value of 1 frame per second will ensure that the EyeCopter may gather a sufficient amount of images in order to reproduce a detailed and complete three dimensional model. 
+\paragraph{\texttt{k\_Storage}} It is estimated that 8 gigabytes of storage be sufficient to hold all pictures taken during a single flight in accordance with the set camera resolution. 
+\paragraph{\texttt{k\_MaxSpeed}} A maximum horizontal velocity of 1 meter/second is enforced in order to ensure that pictures may be taken at a constant rate as well as to aid in collision avoidance and object detection/reaction.
+\paragraph{\texttt{k\_MaxTilt}} A maximum tilt angle of 15 degrees must not be surpassed at any given time in order to ensure consistent framing for the images taken.
+\paragraph{\texttt{k\_MinDist}} A minimum distance of one meter should be kept between the focus object and the quad-copter to avoid potential collision as well as to ensure that the entire object always be within frame of the camera.
+\paragraph{\texttt{k\_DistTol}} A maximum flight duration of 15 minutes was chosen in accordance with the estimated achievable flight time of a fully charged battery.
+
+
+\subsection{Functional Decomposition}
+The operation of the quad-copter will be in three phases of Takeoff, Scanning, and Landing. \par
+During the takeoff phase, the quad-copter will take initial measurements of battery voltage and current as well as take distance readings to ensure that all sensors are working properly. The quad-copter will slowly spin up the motors and ascend to a desired initial elevation. After it reaches this elevation, the quad-copter will approach the object to be scanned until it reaches the optimal distance away from the object. \par
+During the scanning phase, the quad-copter will take photos of the object at set intervals on a path around the object. This path is planned in real-time and aims to keep a constant distance from the camera to the face of the object. When the quad-copter completes a circuit around the object. After the quad-copter finishes its final circuit around the object, it will move on to the landing phase. The behaviour of the scanning phase is outlined in figure \ref{fig:scanning_phase}. \par
+In the landing phase, the quad-copter will reduce throttle to its motors progressively until safely landing. The quad-copter will turn off its motors and open the battery relay, effectively turning off the quad-copter.
+
+
+\newpage
+
+
+\section{General System Description}
+\subsection{System Context}
+The EyeCopter is designed to autonomously scan and compose a 3D model of an opaque and somewhat convex object whose size is larger than is ideally reachable by a human user. The EyeCopter is intended for outdoor use provided that the EyeCopter is not to be exposed to extreme or otherwise detrimental weather conditions such as rain or heavy wind speeds, as well as indoor use provided that the room in which it is operational contains sufficient space to allow the EyeCopter to complete its operational cycle as specified within this document.
+
+\subsection{System Modes and States}
+
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{c p{8.5cm}}
+\hline
+\sc{Mode} & \sc{Description} \\
+\hline
+\texttt{SYSTEM\_OFF} & The state wherein the battery is not feeding power to the rest of the system.\\
+\texttt{SYSTEM\_INIT} & The state wherein the quad-copter first lifts off and finds the object in front of it to scan.\\
+\texttt{SYSTEM\_SCAN} & The state wherein the quad-copter is moving horizontally along the object being scanned, and the camera is taking pictures at set intervals.\\
+\texttt{SYSTEM\_TAKEOFF} & The state wherein the quad-copter moves vertically to a height where scanning begins. \\
+\texttt{SYSTEM\_LAND} & The state wherein the quad-copter is attempting to land at its starting point, and shuts down. \\
+\texttt{SYSTEM\_FAILURE} & The state wherein the 3D scanning operation has failed in some capacity. \\
+\texttt{SYSTEM\_E\_LANDING} & The state wherein the quad-copter attempts to land at whatever position it is currently at, and shuts down. \\
+\texttt{SYSTEM\_ABORT} & The state wherein the quad-copter cannot begin the scanning operation, and shuts down. \\
+\texttt{SYSTEM\_MANUAL\_CONTROL} & The state wherein the user assumes control of the quad-copter using a remote control. \\
+\end{tabular}
+\end{center}
+\caption[System Modes and States]{System Modes and States\textcolor{red}{*}}
+\end{table}
+
+
+\subsection{Major System Capabilities and Conditions}
+The EyeCopter is designed to autonomously scan and compose a 3D model of an opaque and somewhat convex object whose size is larger than is ideally reachable by a human user. The EyeCopter is intended for outdoor use provided that the EyeCopter is not to be exposed to extreme or otherwise detrimental weather conditions such as rain or heavy wind speeds, as well as indoor use provided that the room in which it is operational in contains sufficient space to allow the EyeCopter to complete its operational cycle as specified within this document.
+
+% TODO: Remove \verb and replace with \texttt, its better syntax and better behaved - DONE
+\begin{enumerate}[label=\textbf{MC\arabic*}]
+	% 1.
+	\item In order to execute the scanning procedure, the quad-copter will find the object in front of it during the initialization sequence and begin the scan operation. It will abort the operation based on the following condition is met: object detected by the front sensor, 
+    
+    Monitored variables: \texttt{m\_DistF} \par
+    Controlled variables: \texttt{c\_State} \par
+    Constants: N/A \par
+    Mathematical Representation: \par
+    \begin{table}[H] 
+    \begin{adjustwidth}{-1.2in}{-1.2in}  
+    \begin{center}
+    \begin{tabular}{c c}
+	\hline
+	\sc{Condition} & \sc{Outcome} \\
+	\hline
+	\texttt{m\_DistF==NaN} & \texttt{c\_State=SYSTEM\_ABORT} \\
+    \texttt{m\_DistF!=NaN} & \texttt{c\_State=SYSTEM\_SCAN} \\
+	\end{tabular}
+    \end{center}
+    \caption[2.3.1 Condition Table]{2.3.1 Condition Table}
+    \end{adjustwidth}
+	\end{table} 
+    
+    % 2.
+    % TODO: rephrase this such that it specifies holding altitude - DONE
+	\item To ensure the safety of bystanders, operators, and the device, as well as to allow the system to be able to meet many other quad-copter related constraints and requirements, the quad-copter must be able to achieve sustained flight while holding it's altitude during the SYSTEM\_SCAN, SYSTEM\_CHECK, SYSTEM\_FAILURE, and SYSTEM\_MANUAL\_CONTROL states. \par 
+    
+    Monitored variables: \texttt{m\_PZ}  \par
+    Controlled variables: \texttt{c\_VZ, c\_State} \par 
+    Constants: N/A \par
+    Mathematical Representation: \par
+    \begin{table}[H] 
+    \begin{adjustwidth}{-1.5in}{-1.5in}  
+    \begin{center}
+    \begin{tabular}{c c}
+	\hline
+	\sc{Condition} & \sc{Outcome} \\
+	\hline
+    \texttt{c\_State == (SYSTEM\_SCAN || SYSTEM\_CHECK || SYSTEM\_FAILURE || SYSTEM\_MANUAL\_CONTROL)} & \texttt{(c\_VZ = 0)\&\&(m\_PZ = 0)}\\
+	\end{tabular}
+    \end{center}
+    \caption[2.3.2 Condition Table]{2.3.2 Condition Table}
+    \end{adjustwidth}
+	\end{table} 
+
+
+       
+    % 3.
+    % TODO: Not necessarily level, but within maximum tilt amount - DONE
+    \item The quad-copter must be able to keep within maximum tilt during flight, regardless of outside disturbances. \par 
+    
+    Monitored variables: N/A\par
+    Controlled variables: \texttt{c\_Pitch, c\_Roll} \par
+    Constants: N/A.\par
+    Mathematical Representation: \texttt{c\_Pitch}$ = 0$ $ \pm $ 0.1 m, \texttt{c\_Roll}$ = 0$ $ \pm $ 0.1 m 
+    \begin{table}[H] 
+    \begin{adjustwidth}{-1.2in}{-1.2in}  
+    \begin{center}
+    \begin{tabular}{c c}
+	\hline
+	\sc{Condition} & \sc{Outcome} \\
+	\hline
+	\texttt{ALL STATES} & N/A \\
+	\end{tabular}
+    \end{center}
+    \caption[2.3.3 Condition Table]{2.3.3 Condition Table}
+    \end{adjustwidth}
+	\end{table} 
+    
+    % 4.
+    % TODO: Perhaps replace 0.1 with a maximum vertical velocity?
+    \item To ensure the quad-copter's continued longevity, the quad-copter must be able to safely land without damaging any of its parts, and thus must move towards the ground at a suitably low velocity. \par 
+    Monitored variables: N/A \par
+    Controlled variables: \texttt{c\_VZ} \par
+    Constants: N/A \par
+    Mathematical Representation: \par
+    \begin{table}[H]
+    \begin{adjustwidth}{-1.2in}{-1.2in}  
+	\begin{center}
+	\begin{tabular}{cc}
+	\hline
+	\sc{Condition} & \sc{Outcome} \\
+	\hline
+	\texttt{(c\_State==SYSTEM\_LAND)} & $\|$\texttt{c\_VZ}$\|$ $<$ 0.1\\
+	\end{tabular}
+	\end{center}
+    \end{adjustwidth}
+	\caption[2.3.5 Condition Table]{2.3.5 Condition Table}
+	\end{table}
+    
+    % 5.
+    % TODO: Get rid of magic 2 number here and put in a constant for minimum distance, this should also only cover right and left since forward distance is covered in MC7 - DONE
+    \item To ensure the safety of both the object and the quad-copter, the quad-copter must be able to avoid collisions with the object it is scanning, be keeping a certain distance away from all surfaces on the front, left, and right side. \par 
+    Monitored variables: \texttt{m\_DistL}, \texttt{m\_DistR}, \texttt{m\_DistF} \par
+    Controlled variables: N/A\par
+    Constants: \texttt{k\_MinDist} \par
+    Mathematical Representation:
+    \begin{table}[H] 
+    \begin{adjustwidth}{-1.2in}{-1.2in}  
+    \begin{center}
+    \begin{tabular}{c c}
+	\hline
+	\sc{Condition} & \sc{Outcome} \\
+	\hline
+	All States & \texttt{(m\_DistR < k\_MinDist)\&\&(m\_DistL < k\_MinDist)} \\
+	\end{tabular}
+    \end{center}
+    \caption[2.3.6 Condition Table]{2.3.6 Condition Table}
+    \end{adjustwidth}
+	\end{table} 
+    
+    % 6.
+    % TODO:  add a tolerance on distance and remove magic number, replace with constant - DONE
+    % Expand on rational for keeping images consistent - DONE (see constant rationale)
+    \item The quad-copter must be able to keep a set distance away from the object it is scanning, to keep images consistent. \par 
+    
+    Monitored variables: \texttt{m\_DistF} \par
+    Controlled variables: \texttt{c\_State} \par
+    Constants: \texttt{k\_MinDist} \par
+    Mathematical Representation:
+    \begin{table}[H] 
+    \begin{adjustwidth}{-1.2in}{-1.2in}  
+    \begin{center}
+    \begin{tabular}{c c}
+	\hline
+	\sc{Condition} & \sc{Outcome} \\
+	\hline
+	\texttt{c\_State==SYSTEM\_SCAN} & \texttt{m\_DistF = k\_MinDist}\\
+	\end{tabular}
+    \end{center}
+    \caption[2.3.7 Condition Table]{2.3.7 Condition Table}
+    \end{adjustwidth}
+	\end{table} 
+    
+\end{enumerate}
+
+\subsection{Major System Constraints} 
+\begin{enumerate}[label=\textbf{MC\arabic*}]
+    \setcounter{enumi}{6}
+	\item To prevent collisions, the speed at which the quad-copter is moving must be below such a speed that the sensor will be able to detect an impending collision and the flight controller will be able to avoid said collision.
+    %TODO: We aren't sewing images, why mention stitching? - DONE
+    % Reword this to mention accounting for blurred images - DONE
+    \item The quad-copter must not exceed the speed at which picture quality becomes unusable (ie. shaky or blurred images). The pictures taken while the quad-copter is orbiting the object must have some amount of overlap such that the images may be ideally modelled.
+% 	\item During the rise step, the quad-copter must not rise so far as to miss parts of the object for the scan. In essence, that the picture being taken from a certain distance up must not have zero overlap with the picture taken right above it, so that images can be stitched together.
+    \item The manual off switch of the quad-copter must be out of the way of the propellers, such that an emergency shutdown carries the minimum possible risk to the user.
+\end{enumerate}
+
+\subsection{User Characteristics}
+
+\subsubsection{Hobbyist}
+
+Hobbyist will use EyeCopter to create 3D models of scans for personal use.
+
+\subsubsection{Professional}
+
+Users in the professional field can use EyeCopter to scan objects of any sort. In the insurance field, EyeCopter can be used to scan cars or homes for any exterior damage. This will allow insurance companies to have a better record of customer claims. EyeCopter can also be used for quality inspection. It will allow the user to have EyeCopter scan sections of an object that cannot be easily reached by man.
+
+\subsection{Assumptions \& Dependencies}
+\begin{enumerate}[label=\textbf{AD\arabic*}]
+	% TODO: What exactly is irregular? (non-concave, etc) => we may want to detail what it means for an object to be generic in the terms section. - DONE (reworded to remove "generic")
+	\item The shapes to be scanned should have unique features or textures. The EyeCopter will not be able to provide a 3D model for objects that are completely symmetric, smooth, transparent or reflective.
+    % Relatively? - DONE (removed "relatively")
+    \item The objects must be opaque and non-mundane in order to scan.
+    \item EyeCopter must be able to scan an object at a maximum of a specified length, width and height.
+    \item EyeCopter can only be run when the weather is clear. The quad-copter will not function in precipitation or moderate to heavy winds.
+    \item Any operator of EyeCopter must be aware of its functionality before use.
+    \item EyeCopter must have a clear space in order for it to operate.
+    \item All non-modular components are assumed to be durable enough to survive the life time of the drone.
+    \item EyeCopter can store at least 4GB worth of scans in one scan cycle before it runs out of storage space.
+    
+\end{enumerate}
+
+\subsection{Operational Scenarios \& Formal Representation}
+\begin{enumerate}[label=\textbf{SR\arabic*}]
+	\item \textit{Regular flight scenario} - Upon initialization the quad-copter will steadily increase throttle to its motors, until it rises to an acceptable height. The nest stage in the process is for the quad-copter to detect the object it must scan. The quad-copter sends out a sensor pulse, which gives the device a rough approximation of its distance to the object. it then approaches the object to an acceptable distance, and begins orbiting it until the orbiting process is deemed complete. The quad-copter then initiates its landing sequence, and safely comes to a stop.
+    \item \textit{Low battery scenario}- In the low battery scenario, if the EyeCopter is in the middle of a flight, it will slowly be directed to land in order to avoid any damages or injuries.
+    \item \textit{Abort scenario} - In the abort scenario, if the EyeCopter deviates from typical start up, the EyeCopter will be able to initiate abort on the quad-copter before any further problems occur.
+    % Currently don't have a way of remotely instructing the quad-copter to land, might be possible, might not
+    \item \textit{Emergency shutdown scenario} - In the emergency shutdown scenario, if EyeCopter is in the middle of a flight and in case of complications, such as instability or imminent collision, the user will be able to command the EyeCopter to land. This will result in the EyeCopter's abrupt cessation of activities and will return with a safe landing. The user will be able to emergency shutdown from the landing pad.  
+\end{enumerate}
+
+
+\newpage
+
+
+\section{System Capabilities, Conditions \& Constraints}
+\subsection{Physical}
+\begin{enumerate}[label=\textbf{PH\arabic*}] 
+
+\item To minimize costs, most of the components related to the structural integrity of the EyeCopter should be non-modular while the outer components should be modular as they are more likely to be damaged and need replacement.
+
+\item Modular components should be easily removed and replaceable.
+
+\item The construction of every aspect and component of the quad-copter and sensor components should be approved or overseen by someone with mechanical expertise.        
+
+\item To minimize the cost of the quad-copter, modular components should be composed of a plastic or plastic-like material which should be cheap enough to replace on an undergrad student's budget and durable enough to not need to be replaced more often than twice per month when under expected conditions.
+
+\item To maximize the longevity of the quad-copter, non-modular components should be durable enough to withstand an unexpected collision at the quad-copter's maximum expected velocity. 
+
+\item To both minimize costs and maximize longevity of the quad-copter, non-modular components should not need replacement or extensive repair due to wearing out within expected operational constraints over the effective lifespan of the project.
+
+%FIXME: relate temperature/humidity to wear and tear - DONE
+% \item The quad-copter is intended for operation in clear and temperate weather with little wind speed present. 
+
+\item The quad-copter should be able to operate within reasonable temperate and humidity conditions without the need for extensive maintenance (increased wear and tear on components directly exposed to the elements).
+
+\item Sensors must be able to accurately detect distance from a near-perpendicular surface within an acceptable margin of error.
+
+\item There must be no exposed conductive material present anywhere on the quad-copter. All conductive material that is not safely insulated on its own must be insulated via heat shrink or electrical tape.
+
+\item Any and all components must be secured safely in place such that the components do not vibrate independently of the rest of the quad-copter. 
+
+\item The quad-copter cannot exceed a heat threshold, preventing unexpected system behaviour as a result of overheating.
+
+\end{enumerate}
+
+\subsection{System Performance Characteristics}
+\begin{enumerate}[label=\textbf{SC\arabic*}]
+%GET RID OF STITCHING - DONE
+	\item The EyeCopter should be able to accurately capture and model a sequence of images together of resolutions no lower than 720p. This will ensure a minimum accepted level of detail for the 3D model, while also placing a boundary on image processing times.
+    \item The quad-copter should be able to consistently maintain flight speeds and should not travel at any speeds exceeding it's maximum allotted speed.
+	\item Flight related operations in the on-board systems should have priority over all other operations.
+\end{enumerate}
+
+\subsection{Information Management}
+\begin{enumerate}[label=\textbf{IM\arabic*}]
+	\item Any and all image files accumulated through the EyeCopter's designed use should be stored on a removable SD card which will be interfaced with the EyeCopter during intended use. This is done so to avoid straining the processors.
+    % Add in item relating to disposing/deleting images after processing - DONE
+    \item Following image capture, all pictures are copied to a local directory for model processing and deleted from the SD card.
+\end{enumerate}
+
+\subsection{System Operations}
+\begin{enumerate}[label=\textbf{SO\arabic*}]
+\item The EyeCopter should be largely autonomous and should require minimal human interaction for it to accomplish its intended functions. 
+\item Expected operators and bystanders of the EyeCopter should be aware of its location and operation as well as being wary of coming into unexpected contact with it while in operation.
+\item The EyeCopter should have a powerful enough battery to power it for the entirety of a single operational task, from start to finish. This ensures that the EyeCopter can complete an operational task without needing to be recharged.
+\item Prior to operation all at-risk components must be inspected thoroughly by a member of the design team.
+\end{enumerate}
+
+\subsection{Policy \& Regulation}
+% Citation Needed on fucking everything
+\begin{enumerate}[label=\textbf{PR\arabic*}]
+	\item The quad-copter will weigh less than 2 kg, allowing it to fly as outlined by Transport Canada without necessary permission - Flying an unmanned aircraft for work or research [see reference 1]. % use built in latex commands for referencing
+    \item To ensure legal operation, the EyeCopter will adhere to all relevant safety guidelines outlined by the Canadian Aviation Regulations. % citation needed
+    \item To ensure legal operation, the EyeCopter will comply with any relevant sections of the Criminal Code and any municipal, provincial and territorial laws relating to the trespassing. Please note, that invasion of privacy or the use of this product for surveillance will fall under trespassing.
+    \item To ensure legal operation, the EyeCopter will comply to all applicable sections "Advisory Circular No. 600-004 - Guidance Material for Operating Unmanned Air Vehicle Systems under an Exemption" [see reference 2].  % use built in latex commands for referencing
+    \item EyeCopter will allow user overriding of autonomous features such that it complies with section 4.2 subsection 31 of the Guidance Material for Operating Unmanned Air Vehicle Systems under an Exemption. %citation needed
+    \item The quad-copter falls under the policies and regulations of Advisory Circular No. 600-004 - Guidance Material for Operating Unmanned Air Vehicle Systems under an Exemption because it satisfies the requirements noted in section 1.3 which is in regards to applicability.
+    \item In particular, EyeCopter will comply with all subsections of 4.1 - General Conditions. Some of these subsections involve the user and as such the user will have to comply with these subsections as they are in regards to the safety of the user and the public.
+\end{enumerate}
+
+%subject to removal as per group :P
+\subsection{Life Cycle Sustainability}
+As stated above the construction of the EyeCopter will involve modular and non-modular components. The modular components will be of a cheaper material as they may need to be replaced. The non-modular components should be durable much longer than the modular components. In the event that modular components require replacement, it should be simple to order new components and replace any failed components. \par
+During the development of the EyeCopter, it will be subjected to rigorous testing and thus modularity is a key cornerstone of the design. This is because in the event of a failure, any component that breaks or fails needs to be replaced with a working component without taking everything apart.\par
+\begin{enumerate}[label=\textbf{LCS\arabic*}]
+	\item Moderate technical understanding of the EyeCopter will be required for replacement of components. 
+    \item Modular components must have a minimum expected life on the order of months when under expected conditions.
+    \item To maximize longevity non-modular components, they should be able to withstand small to medium impact collisions without failure.
+    \item Failed modular components should be disposed of in a sustainable manner as they will be made of plastic or similar material.
+    \item Many of the modular components can be 3D printed. The models for these components will be provided.\color{red}*\color{black}
+    \item To minimize the costs of the project, the non-modular components will have an expected life of approximately a year under expected conditions.
+\end {enumerate}
+\newpage
+
+%subject to removal as per group :P
+\section{System Interfaces}
+%COMPLETE REWORK
+The EyeCopter has two major systems that will interact with one another, the hardware/software component on the quad-copter and the EyeCopter modelling software.\par
+
+%The quad-copter component will be receiving and sending radio signals to the landing pad\color{red}*\color{black}.
+
+On board the different components of the quad-copter will interact with one another in order to ensure all requirements are met. This will involve sensors interacting with the on board flight controller to ensure that the quad-copter is stable and avoiding any obstacles that might lead to a collision. The sensors will also ensure that a respectable distance is established from the object being scanned. In the event that there is no object present in front of the quad-copter it will also abort the scanning operation. The camera will be interfacing with an on board Arduino which will store images to an SD card. It will also be responsible for notifying the flight controller that the landing pad is directly below the quad-copter. Finally, the flight controller will be responsible for interacting with all the hardware on the quad-copter. It will be responsible for all actions concerning the motors; including any emergency protocols such as an emergency shutdown. The emergency shutdown button on board will be responsible for interacting with the flight controller and turning the power for the quad-copter off. That concludes the interactions between the components on board the quad-copter.\par
+% The landing pad will be interacting with the flight controller by sending radio signals that will communicate if the quad-copter is ready for take off. It will also a button that sends an emergency landing signal. That concludes the system interfaces in regards to the landing pad. 
+%%%% we do not have the landing pad anymore
+\par 
+
+\section{Items Likely to Change}
+This section will briefly explain all of the items in the requirements document that are more likely to change than anything else. All items that are considered "likely to change" are marked by a red asterisk throughout the document, and the rationale for these items will be listed here.\par
+
+\begin{enumerate}
+	\item Constants \texttt{k\_TotalMass}, \texttt{k\_TotalHeight}, and \texttt{k\_Storage} are deemed likely to change, as we have written preliminary values for said constants, but the actual hardware for the size of the EyeCopter's frame are liable to change based on testing and addition of sensing components.
+    \item The scanning phase algorithm is also listed as likely to change. As testing is performed, it may be that to complete the scanning phase the algorithm will have to be modified.
+    \item It is predicted that this is not a conclusive and final list of all system states, and that more distinct states may be deemed necessary as the system is designed.
+    \item The launchpad and its implementation and use are things that are likely to change. Currently it functions as more or less a placeholder for a starting point for the launch, and a device through which to send instructions such as an emergency stop for the quad-copter.
+\end {enumerate}
+
+
+\end{document}

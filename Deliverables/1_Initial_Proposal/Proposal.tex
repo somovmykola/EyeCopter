@@ -1,0 +1,71 @@
+\documentclass[10pt,letterpaper]{article}
+\setlength{\paperheight}{11in}
+\setlength{\paperwidth}{8.5in}
+\usepackage[ascii]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{soul}
+\usepackage{array}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\usepackage{latexsym}
+
+
+\begin{document}
+	
+	% TITLE PAGE
+	
+	\begin{titlepage}
+		\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+		\center
+		
+		\textsc{\LARGE McMaster University}\\[1.5cm] % Name of your university/college
+		\textsc{\Large Project Proposal}\\[0.5cm] % Major heading such as course name
+		\textsc{\large 4G06 Capstone Design Project}\\[0.5cm] % Minor heading such as course title
+		
+		\HRule \\[0.4cm]
+		{ \huge \bfseries 3D Scanning Quadcopter \\[2mm] \textit{A Large Scale 3D Scanner}}\\[0.4cm] % Title of your document
+		\HRule \\[1.5cm]
+		
+		\begin{tabular}{ccc}
+			\bf{Paul Correia}		& \bf{Nicolas Lelievre} 	& \bf{Bennett Mackenzie}		\\
+			Mechatronics Eng 		& Software Eng 				& Software Eng 					\\
+			\textit{1132370} 		& \textit{1203446}			& \textit{1211985} 				\\ \\
+			\bf{Tigran Martikan} 	& \bf{Balraj Shah} 			& \bf{Mykola Somov} 			\\
+			Software Eng			& Software Eng				& Software Eng 					\\
+			\textit{1213170} 		& \textit{1207997}			& \textit{1141160}
+		\end{tabular}\\[4cm]
+		
+		{\large October 1, 2015}\\[3cm] 
+		
+		%\includegraphics{Logo}\\[1cm] % Include a department/university logo - this will require the graphicx package
+		
+		\vfill % Fill the rest of the page with whitespace
+		
+	\end{titlepage}
+	
+
+
+\section*{Project Description}
+We propose for our capstone project, a quadcopter that can scan an object (tentatively around the order of one to two meters, possibly scaled higher) and produce a 3D model that can be scaled down and 3D printed. \par 
+Our initial impressions are to have the quadcopter scan the object (using either image processing, lidar detection or a combination thereof) by circling said object to be scanned and convert the captured data to a 3D model file for examination and potentially 3D printed at a scaled down size. \par 
+As far as our research has revealed, no large scale automated three dimensional scanning peripherals currently exist, giving our project both meaning in versatile and real life application as well as focus and exposure within an emerging industry.
+
+\section*{Required Skills \& Engineering Knowledge}
+Our group will necessitate knowledge in a variety of fields including basic quadcopter operation, real-time flight automation, real-world to model mapping conversion and model scaling/3D printing. \par 
+Luckily, both quadcopters and 3D printers have reached a certain level of popularity in numerous fields resulting in high levels of documentation, scalability and customisation with minimal resources required. \par 
+The challenge will rest with automating the quadcopter's control and operations with regard to properly scanning a large-scale physical object with reliable and sufficient accuracy to then be converted into digital 3D model formats suitable for printing. \par 
+These necessary skills and knowledge base, however, do not surpass our abilities as engineers.
+
+\section*{Group Composition}
+We believe our group composition is very capable of this task. \par 
+The level of mechanical expertise necessary to complete this project is well within our abilities, given that quadcopters are well-documented in terms of design and customisability. Also note that we have a mechatronics student to aid with both electrical and physical design. \par 
+Software design will be the bulk of the challenge of this project. Specifically, generating the 3D model from the sensor(s) as well as the control software utilised to fly and automate the quadcopter's operations. The software itself will be where most of the complexity lies, which is fitting due to the fact that the majority of our group consists of software engineers. \par 
+Planning ahead, our proof of concept due in December could be a functioning quadcopter and/or proof that valuable information is gatherable and accurate enough for use in generated 3D models.
+
+
+
+
+\end{document}
